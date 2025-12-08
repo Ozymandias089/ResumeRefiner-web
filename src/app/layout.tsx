@@ -18,6 +18,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "ResumeRefiner",
   description: "AI-powered resume review and feedback service",
+  icons: {
+    icon: "/logo.svg", // ← public 폴더 기준
+  },
 };
 
 export default function RootLayout({
