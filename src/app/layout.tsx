@@ -34,9 +34,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
-          <AppShell>
+          {/* <AppShell> */}
             {children}
-          </AppShell>
+          {/* </AppShell> */}
 
           {/* 전역 토스트 */}
           <Toaster />
