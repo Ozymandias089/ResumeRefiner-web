@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
+import { FieldDescription } from "../ui/field";
 
 export function SignupBox() {
   const router = useRouter();
@@ -72,10 +73,10 @@ export function SignupBox() {
         </svg>
         Google
       </Button>
-      <div className="px-6 text-center">
+      <FieldDescription className="px-6 text-center">
         계속 진행하면, <a href="#">서비스 이용약관</a>과{" "}
         <a href="#">개인정보 처리방침</a>에 동의하는 것으로 간주됩니다.
-      </div>
+      </FieldDescription>
     </div>
   );
 }

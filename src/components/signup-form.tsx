@@ -177,7 +177,7 @@ export function SignupForm({
 
       // 성공 시 처리: 로그인 페이지로 이동하거나, 자동 로그인 등
       // 예: 로그인 페이지로 리다이렉트
-      router.push("/auth/result?flow=signup");
+      router.push("/dashboard");
       // alert("회원가입이 완료되었습니다. 이제 로그인해 주세요.");
     } catch (error: any) {
       setSubmitError(error.message || "회원가입에 실패했습니다.");

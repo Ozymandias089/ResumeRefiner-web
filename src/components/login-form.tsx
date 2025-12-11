@@ -67,7 +67,7 @@ export function LoginForm({
 
       // ✅ 백엔드에서 세션/쿠키 설정이 끝났다고 가정
       // 개발용 스텁 페이지로 이동
-      router.push("/auth/result?flow=login");
+      router.push("/dashboard");
     } catch (error: any) {
       setSubmitError(error.message || "로그인에 실패했습니다.");
     } finally {
