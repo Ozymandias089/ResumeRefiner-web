@@ -1,16 +1,15 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { IconArrowRight, IconFileDescription } from "@tabler/icons-react"
+import { IconArrowRight, IconFileDescription } from "@tabler/icons-react";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -18,56 +17,12 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { formatMDHM } from "@/lib/datetime"
-
-// 타입은 백엔드 응답에 맞게 나중에 조정하면 됨
-type DashboardResume = {
-  id: number
-  title: string
-  slug: string
-  updatedAt: string
-  lastReviewAt?: string | null
-}
-
-const mockData: DashboardResume[] = [
-  {
-    id: 1,
-    title: "백엔드 개발자 지원 이력서",
-    slug: "backend-developer",
-    updatedAt: "2025-01-10T12:23:45.123Z",
-    lastReviewAt: "2025-01-11T10:24:13.321Z",
-  },
-  {
-    id: 2,
-    title: "SI 경력 개발자 포지션",
-    slug: "si-experienced",
-    updatedAt: "2025-01-09T09:13:32.000Z",
-    lastReviewAt: null,
-  },
-]
+} from "@/components/ui/table";
+import { formatMDHM } from "@/lib/datetime";
+import { useRecentResumes } from "@/features/dashboard/hooks/useRecentResumes";
 
 export function DashboardRecentResumes() {
-  const [resumes, setResumes] = useState<DashboardResume[]>(mockData)
-  const [loading, setLoading] = useState(false)
-
-  // TODO: 백엔드 준비되면 여기에 실제 API 연동
-  // useEffect(() => {
-  //   async function load() {
-  //     try {
-  //       setLoading(true)
-  //       const res = await fetch("/api/resumes?limit=5", {
-  //         credentials: "include",
-  //       })
-  //       if (!res.ok) return
-  //       const data = await res.json()
-  //       setResumes(data.items)
-  //     } finally {
-  //       setLoading(false)
-  //     }
-  //   }
-  //   load()
-  // }, [])
+  const { items: resumes, loading } = useRecentResumes(5);
 
   return (
     <Card className="h-full">
@@ -134,5 +89,5 @@ export function DashboardRecentResumes() {
         )}
       </CardContent>
     </Card>
-  )
+  );
 }
