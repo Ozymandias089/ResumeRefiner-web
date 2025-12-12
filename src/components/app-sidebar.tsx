@@ -28,104 +28,19 @@ import {
 import { AppLogo } from "./app-logo";
 import { useCurrentUser } from "@/hooks/use-current-user";
 
-const data = {
-  user: {
-    name: "홍길동",
-    handle: "honggildong",
-    email: "user@example.com",
-    avatar: "/avatars/default-user.png",
-  },
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "/dashboard",
-      icon: IconDashboard,
-    },
-    {
-      title: "Resumes",
-      url: "/resumes",
-      icon: IconFileDescription,
-    },
-    {
-      title: "Reviews",
-      url: "/reviews",
-      icon: IconReport,
-    },
-    {
-      title: "Billing",
-      url: "/billing",
-      icon: IconReport,
-    },
-    {
-      title: "Admin",
-      url: "/admin",
-      icon: IconUsers,
-      requiresAdmin: true,
-    },
-    {
-      title: "Server Debug",
-      url: "/debug/server",
-      icon: IconDatabase,
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Settings",
-      url: "/settings",
-      icon: IconSettings,
-    },
-    {
-      title: "Get Help",
-      url: "/help",
-      icon: IconHelp,
-    },
-    {
-      title: "Search",
-      url: "/search",
-      icon: IconSearch,
-    },
-  ],
-  documents: [
-    {
-      name: "새 이력서 만들기",
-      url: "/resumes/new",
-      icon: IconFileDescription,
-    },
-    {
-      name: "최근 리뷰 보기",
-      url: "/reviews/recent",
-      icon: IconReport,
-    },
-    {
-      name: "크레딧 구매",
-      url: "/billing/checkout",
-      icon: IconReport,
-    },
-  ],
-};
+import { sidebarConfig } from "@/features/navigation/sidebar-config";
+import { filterNavByRole } from "@/features/navigation/selectors";
+import { toNavUserVM } from "@/features/navigation/mappers";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user } = useCurrentUser();
-  const isAdmin = user?.role === "ADMIN";
 
-  // Admin 메뉴 필터링
   const navMainItems = React.useMemo(
-    () =>
-      data.navMain.filter((item: any) => {
-        if (item.requiresAdmin && !isAdmin) return false;
-        return true;
-      }),
-    [isAdmin]
+    () => filterNavByRole(sidebarConfig.navMain, user),
+    [user]
   );
 
-  const navUserData = user
-    ? {
-        name: user.name,
-        handle: user.handle,
-        email: user.email,
-        avatar: user.profileImageUrl ?? "/avatars/default-user.png",
-      }
-    : data.user;
+  const navUserData = React.useMemo(() => toNavUserVM(user), [user]);
 
   return (
     <Sidebar collapsible="offcanvas" {...props}>
@@ -145,8 +60,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={navMainItems} />
-        <NavDocuments items={data.documents} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavDocuments items={sidebarConfig.documents} />
+        <NavSecondary items={sidebarConfig.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={navUserData} />
