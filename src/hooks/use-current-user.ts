@@ -28,9 +28,9 @@ export function useCurrentUser() {
     async function load() {
       try {
         setLoading(true)
-        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-        const res = await fetch(`${baseUrl}/api/auth/me`, {
+        const res = await fetch(`/api/auth/me`, {
           credentials: "include",
+          cache: "no-store",
         })
 
         if (!res.ok) {

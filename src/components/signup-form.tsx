@@ -81,9 +81,6 @@ export function SignupForm({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const baseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080";
-
   // -----------------------------------
   // 1) 핸들 실시간 검사
   // -----------------------------------
@@ -107,7 +104,7 @@ export function SignupForm({
     const timeoutId = setTimeout(async () => {
       try {
         const res = await fetch(
-          `${baseUrl}/api/handle/check?handle=${encodeURIComponent(handle)}`,
+          `/api/handle/check?handle=${encodeURIComponent(handle)}`,
           { signal: controller.signal }
         );
 
@@ -139,7 +136,7 @@ export function SignupForm({
       clearTimeout(timeoutId);
       controller.abort();
     };
-  }, [handle, baseUrl]);
+  }, [handle]);
 
   const isHandleError =
     handleStatus === "invalid" ||
@@ -173,7 +170,7 @@ export function SignupForm({
       try {
         // 🔧 여기 URL을 실제 백엔드 이메일 중복 확인 API에 맞게 수정
         const res = await fetch(
-          `${baseUrl}/api/email/check?email=${encodeURIComponent(email)}`,
+          `$/api/email/check?email=${encodeURIComponent(email)}`,
           { signal: controller.signal }
         );
 
@@ -205,7 +202,7 @@ export function SignupForm({
       clearTimeout(timeoutId);
       controller.abort();
     };
-  }, [email, baseUrl]);
+  }, [email]);
 
   const isEmailError =
     emailStatus === "invalid" ||
@@ -279,7 +276,7 @@ export function SignupForm({
 
     setIsSubmitting(true);
     try {
-      const res = await fetch(`${baseUrl}/api/auth/register`, {
+      const res = await fetch(`/api/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -19,6 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { formatMDHM } from "@/lib/datetime"
 
 type DashboardReview = {
   id: number
@@ -110,12 +111,7 @@ export function DashboardRecentReviews() {
                     {review.resumeTitle}
                   </TableCell>
                   <TableCell className="hidden text-right text-xs text-muted-foreground md:table-cell">
-                    {new Date(review.createdAt).toLocaleString("ko-KR", {
-                      month: "2-digit",
-                      day: "2-digit",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
+                    {formatMDHM(review.createdAt)}
                   </TableCell>
                   <TableCell className="text-right text-sm">
                     {review.overallScore != null ? (

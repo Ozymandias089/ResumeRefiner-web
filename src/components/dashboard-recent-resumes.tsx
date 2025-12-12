@@ -19,6 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { formatMDHM } from "@/lib/datetime"
 
 // 타입은 백엔드 응답에 맞게 나중에 조정하면 됨
 type DashboardResume = {
@@ -111,12 +112,7 @@ export function DashboardRecentResumes() {
                     {resume.title}
                   </TableCell>
                   <TableCell className="hidden text-right text-xs text-muted-foreground md:table-cell">
-                    {new Date(resume.updatedAt).toLocaleString("ko-KR", {
-                      month: "2-digit",
-                      day: "2-digit",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
+                    {formatMDHM(resume.updatedAt)}
                   </TableCell>
                   <TableCell className="text-right">
                     <Button
