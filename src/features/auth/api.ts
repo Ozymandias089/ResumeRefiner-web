@@ -1,4 +1,5 @@
 import { apiFetch } from "@/shared/api/client";
+import type { CurrentUser } from "./types";
 
 export const authApi = {
   login(email: string, password: string) {
@@ -9,13 +10,10 @@ export const authApi = {
   },
 
   logout() {
-    return apiFetch<void>("/api/auth/logout", {
-      method: "POST",
-    });
+    return apiFetch<void>("/api/auth/logout", { method: "POST" });
   },
 
-  // 1단계에는 선택인데, 곧 필요해질 가능성이 높아서 같이 둠
   me() {
-    return apiFetch<any>("/api/auth/me", { method: "GET" });
+    return apiFetch<CurrentUser>("/api/auth/me", { method: "GET" });
   },
 };

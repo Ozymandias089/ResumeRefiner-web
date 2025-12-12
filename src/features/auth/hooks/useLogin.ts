@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { authApi } from "../api";
+import { currentUserStore } from "../current-user-store";
 
 export function useLogin() {
   const router = useRouter();
@@ -16,6 +17,7 @@ export function useLogin() {
 
     try {
       await authApi.login(email, password);
+      await currentUserStore.refresh();
       router.push("/dashboard");
       router.refresh();
     } catch (e: any) {

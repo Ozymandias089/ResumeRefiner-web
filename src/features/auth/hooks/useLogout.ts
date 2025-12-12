@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { authApi } from "../api";
+import { currentUserStore } from "../current-user-store";
 
 export function useLogout() {
   const router = useRouter();
@@ -11,6 +12,7 @@ export function useLogout() {
     return toast.promise(authApi.logout(), {
       loading: "로그아웃 중입니다…",
       success: () => {
+        currentUserStore.clear();
         router.push("/login");
         router.refresh();
         return "로그아웃되었습니다.";
