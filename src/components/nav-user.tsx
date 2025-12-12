@@ -7,8 +7,7 @@ import {
   IconNotification,
   IconUserCircle,
 } from "@tabler/icons-react";
-import { toast } from "sonner";
-
+import { useLogout } from "@/features/auth/hooks/useLogout";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -25,7 +24,6 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useRouter } from "next/navigation";
 
 export function NavUser({
   user,
@@ -38,26 +36,7 @@ export function NavUser({
   };
 }) {
   const { isMobile } = useSidebar();
-  const router = useRouter();
-
-  const handleLogout = async () => {
-    toast.promise(
-      fetch(`/api/auth/logout`, {
-        method: "POST",
-        credentials: "include",
-      }),
-      {
-        loading: "로그아웃 중입니다…",
-        success: () => {
-          // ✅ 세션 정리 완료
-          router.push("/login");
-          router.refresh();
-          return "로그아웃되었습니다.";
-        },
-        error: "로그아웃에 실패했습니다. 다시 시도해주세요.",
-      }
-    );
-  };
+  const { logout } = useLogout();
 
   return (
     <SidebarMenu>
@@ -124,7 +103,7 @@ export function NavUser({
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={handleLogout}
+              onClick={logout}
               className="text-destructive focus:text-destructive"
             >
               <IconLogout />
