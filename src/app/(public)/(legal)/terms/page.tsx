@@ -55,7 +55,7 @@ export default function TermsPage() {
           </p>
 
           <div className="mt-6 flex items-center gap-3">
-            <Link href="/" className="underline text-sm">
+            <Link href="/public" className="underline text-sm">
               홈으로
             </Link>
             <Link href="/privacy" className="underline text-sm">

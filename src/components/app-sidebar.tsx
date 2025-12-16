@@ -1,17 +1,6 @@
 "use client";
 
 import * as React from "react";
-// import {
-//   IconDashboard,
-//   IconDatabase,
-//   IconFileDescription,
-//   IconHelp,
-//   IconReport,
-//   IconSearch,
-//   IconSettings,
-//   IconUsers,
-// } from "@tabler/icons-react";
-
 import { NavDocuments } from "@/components/nav-documents";
 import { NavMain } from "@/components/nav-main";
 import { NavSecondary } from "@/components/nav-secondary";
@@ -29,7 +18,6 @@ import { AppLogo } from "./app-logo";
 
 import { sidebarConfig } from "@/features/navigation/sidebar-config";
 import { filterNavByRole } from "@/features/navigation/selectors";
-import { toNavUserVM } from "@/features/navigation/mappers";
 import {useCurrentUser} from "@/features/auth/hooks/useCurrentUser";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -39,8 +27,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       () => filterNavByRole(sidebarConfig.navMain, user),
       [user]
   );
-
-  const navUserData = React.useMemo(() => toNavUserVM(user), [user]);
 
   const [mounted, setMounted] = React.useState(false);
   React.useEffect(() => setMounted(true), []);
@@ -67,7 +53,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSecondary items={sidebarConfig.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={navUserData} />
+        <NavUser/>
       </SidebarFooter>
     </Sidebar>
   );
