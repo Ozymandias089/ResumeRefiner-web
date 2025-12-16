@@ -24,6 +24,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import React from "react";
 
 export function NavUser({
   user,
@@ -36,6 +37,13 @@ export function NavUser({
   };
 }) {
   const { isMobile } = useSidebar();
+
+  // ✅ SSR/CSR 첫 렌더를 동일하게 만들기
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => setMounted(true), []);
+
+  const side = mounted && isMobile ? "bottom" : "right";
+
   const { logout } = useLogout();
 
   return (

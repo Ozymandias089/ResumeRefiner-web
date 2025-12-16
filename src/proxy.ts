@@ -7,6 +7,10 @@ const PUBLIC_PATHS = ["/", "/login", "/signup", "/terms", "/privacy"]
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
+  if (pathname.startsWith("/api")) {
+    return NextResponse.next();
+  }
+
   // 1️⃣ Next 내부 / 정적 리소스 제외
   if (
     pathname.startsWith("/_next") ||
