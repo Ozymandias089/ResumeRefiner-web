@@ -1,6 +1,5 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import { IconArrowRight, IconStars } from "@tabler/icons-react"
 
 import { Button } from "@/components/ui/button"
@@ -19,53 +18,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-
-type DashboardReview = {
-  id: number
-  resumeTitle: string
-  resumeSlug: string
-  createdAt: string
-  overallScore?: number | null
-}
-
-const mockReviews: DashboardReview[] = [
-  {
-    id: 101,
-    resumeTitle: "백엔드 개발자 지원 이력서",
-    resumeSlug: "backend-developer",
-    createdAt: "2025-01-11T10:24:13.321Z",
-    overallScore: 4.3,
-  },
-  {
-    id: 102,
-    resumeTitle: "SI 경력 개발자 포지션",
-    resumeSlug: "si-experienced",
-    createdAt: "2025-01-10T21:02:00.000Z",
-    overallScore: 3.8,
-  },
-]
+import { formatMDHM } from "@/lib/datetime"
+import { useRecentReviews } from "@/features/dashboard/hooks/useRecentReviews"
 
 export function DashboardRecentReviews() {
-  const [reviews, setReviews] = useState<DashboardReview[]>(mockReviews)
-  const [loading, setLoading] = useState(false)
-
-  // TODO: 실제 API 연결
-  // useEffect(() => {
-  //   async function load() {
-  //     try {
-  //       setLoading(true)
-  //       const res = await fetch("/api/reviews?limit=5", {
-  //         credentials: "include",
-  //       })
-  //       if (!res.ok) return
-  //       const data = await res.json()
-  //       setReviews(data.items)
-  //     } finally {
-  //       setLoading(false)
-  //     }
-  //   }
-  //   load()
-  // }, [])
+  const { items: reviews, loading } = useRecentReviews(5);
 
   return (
     <Card className="h-full">
@@ -110,12 +67,7 @@ export function DashboardRecentReviews() {
                     {review.resumeTitle}
                   </TableCell>
                   <TableCell className="hidden text-right text-xs text-muted-foreground md:table-cell">
-                    {new Date(review.createdAt).toLocaleString("ko-KR", {
-                      month: "2-digit",
-                      day: "2-digit",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
+                    {formatMDHM(review.createdAt)}
                   </TableCell>
                   <TableCell className="text-right text-sm">
                     {review.overallScore != null ? (

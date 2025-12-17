@@ -12,6 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { formatDate } from "@/lib/datetime"
 
 export function SectionCards() {
   const { user } = useCurrentUser()
@@ -113,9 +114,7 @@ export function SectionCards() {
           <CardAction>
             <Badge variant="outline">
               <IconCalendar />
-              {createdAt
-                ? createdAt.toLocaleDateString("ko-KR")
-                : "가입일 정보 없음"}
+              {createdAt ? formatDate(createdAt) : "가입일 정보 없음"}
             </Badge>
           </CardAction>
         </CardHeader>

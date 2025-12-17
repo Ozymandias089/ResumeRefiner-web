@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useSignupForm } from "@/features/auth/hooks/useSignupForm"
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -25,166 +25,21 @@ type SignupFormProps = React.ComponentProps<"div"> & {
   defaultEmail?: string;
 };
 
-const HANDLE_REGEX = /^[a-zA-Z0-9_]+$/;
-
-type HandleStatus =
-  | "idle"
-  | "checking"
-  | "available"
-  | "taken"
-  | "invalid"
-  | "error";
-
 export function SignupForm({
   className,
   defaultEmail,
   ...props
 }: SignupFormProps) {
-  const [handle, setHandle] = useState("");
-  const [handleStatus, setHandleStatus] = useState<HandleStatus>("idle");
-  const [handleMessage, setHandleMessage] = useState<string>("");
+  const router = useRouter()
+  const f = useSignupForm(defaultEmail)
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
-
-  const router = useRouter();
-
-  // 핸들 실시간 검사
-  useEffect(() => {
-    // 아무것도 입력 안 했을 때
-    if (!handle) {
-      setHandleStatus("idle");
-      setHandleMessage("");
-      return;
-    }
-
-    // 패턴 검증
-    if (!HANDLE_REGEX.test(handle)) {
-      setHandleStatus("invalid");
-      setHandleMessage("알파벳, 숫자, 밑줄(_)만 사용할 수 있습니다.");
-      return;
-    }
-
-    // 여기까지 오면 형식은 유효 → 중복 검사 시작
-    setHandleStatus("checking");
-    setHandleMessage("사용 가능 여부를 확인하는 중입니다...");
-
-    const controller = new AbortController();
-    const timeoutId = setTimeout(async () => {
-      try {
-        const baseUrl =
-        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080";
-        const res = await fetch(
-          `${baseUrl}/api/handle/check?handle=${encodeURIComponent(handle)}`,
-          { signal: controller.signal }
-        );
-
-        if (!res.ok) {
-          throw new Error("Failed to check handle");
-        }
-
-        const data: { handle: string; isAvailable: boolean } = await res.json();
-
-        // 응답이 늦게 온 경우를 대비해, 현재 handle과 응답의 handle이 다르면 무시해도 됨
-        if (data.handle !== handle) return;
-
-        if (data.isAvailable) {
-          setHandleStatus("available");
-          setHandleMessage("사용 가능한 핸들입니다.");
-        } else {
-          setHandleStatus("taken");
-          setHandleMessage("이미 사용 중인 핸들입니다.");
-        }
-      } catch (error) {
-        if (controller.signal.aborted) return;
-        setHandleStatus("error");
-        setHandleMessage(
-          "핸들 확인 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
-        );
-      }
-    }, 400); // 400ms 디바운스
-
-    return () => {
-      clearTimeout(timeoutId);
-      controller.abort();
-    };
-  }, [handle]);
-
-  const isHandleError =
-    handleStatus === "invalid" ||
-    handleStatus === "taken" ||
-    handleStatus === "error";
-
-  // ✅ 회원가입 요청 보내는 부분
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setSubmitError(null);
-
-    // 1) FormData에서 값 꺼내기
-    const formData = new FormData(event.currentTarget);
-    const name = String(formData.get("name") || "").trim();
-    const handleValue = String(formData.get("handle") || "").trim();
-    const email = String(formData.get("email") || "").trim();
-    const password = String(formData.get("password") || "");
-    const confirmPassword = String(formData.get("confirmPassword") || "");
-
-    // 2) 간단한 클라이언트 검증
-    if (!name || !handleValue || !email || !password || !confirmPassword) {
-      setSubmitError("모든 필드를 입력해 주세요.");
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setSubmitError("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
-      return;
-    }
-
-    if (!HANDLE_REGEX.test(handleValue)) {
-      setSubmitError("핸들은 알파벳, 숫자, 밑줄(_)만 사용할 수 있습니다.");
-      return;
-    }
-
-    // 핸들 중복 검사 결과를 강제하고 싶다면:
-    if (handleStatus === "taken") {
-      setSubmitError("이미 사용 중인 핸들입니다.");
-      return;
-    }
-
-    // 3) 백엔드 회원가입 API 호출
-    setIsSubmitting(true);
-    try {
-      const baseUrl =
-        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080";
-      const res = await fetch(`${baseUrl}/api/auth/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          handle: handleValue,
-          email,
-          password,
-        }),
-      });
-
-      if (!res.ok) {
-        // 백엔드에서 에러 메시지를 내려주면 파싱해서 보여줄 수도 있음
-        const data = await res.json().catch(() => null);
-        const message = data?.message || "회원가입 중 오류가 발생했습니다.";
-        throw new Error(message);
-      }
-
-      // 성공 시 처리: 로그인 페이지로 이동하거나, 자동 로그인 등
-      // 예: 로그인 페이지로 리다이렉트
-      router.push("/dashboard");
-      // alert("회원가입이 완료되었습니다. 이제 로그인해 주세요.");
-    } catch (error: any) {
-      setSubmitError(error.message || "회원가입에 실패했습니다.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const fd = new FormData(e.currentTarget)
+    const name = String(fd.get("name") || "")
+    const result = await f.submit({ name })
+    if (result.ok) router.push("/dashboard")
+  }
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -198,6 +53,7 @@ export function SignupForm({
         <CardContent>
           <form onSubmit={handleSubmit}>
             <FieldGroup>
+              {/* 이름 */}
               <Field>
                 <FieldLabel htmlFor="name">이름</FieldLabel>
                 <Input
@@ -209,6 +65,7 @@ export function SignupForm({
                 />
               </Field>
 
+              {/* 핸들 */}
               <Field>
                 <FieldLabel htmlFor="handle">핸들</FieldLabel>
                 <Input
@@ -216,23 +73,29 @@ export function SignupForm({
                   name="handle"
                   type="text"
                   placeholder="yourhandle"
-                  value={handle}
-                  onChange={(e) => setHandle(e.target.value)}
+                  value={f.handle}
+                  onChange={(e) => f.setHandle(e.target.value)}
                   required
-                  aria-invalid={isHandleError}
+                  aria-invalid={f.isHandleError}
                   className={cn(
-                    isHandleError &&
-                      "border-destructive focus-visible:ring-destructive"
+                    f.isHandleError &&
+                      "border-destructive focus-visible:ring-destructive",
+                    f.isHandleSuccess &&
+                      "border-emerald-500 focus-visible:ring-emerald-500"
                   )}
                 />
                 <FieldDescription
-                  className={cn(isHandleError && "text-destructive")}
+                  className={cn(
+                    f.isHandleError && "text-destructive",
+                    f.isHandleSuccess && "text-emerald-600"
+                  )}
                 >
-                  {handleMessage ||
+                  {f.handleMessage ||
                     "변경 불가 · 알파벳/숫자/밑줄(_)만 허용됩니다."}
                 </FieldDescription>
               </Field>
 
+              {/* 이메일 */}
               <Field>
                 <FieldLabel htmlFor="email">이메일</FieldLabel>
                 <Input
@@ -240,11 +103,28 @@ export function SignupForm({
                   name="email"
                   type="email"
                   placeholder="you@example.com"
-                  defaultValue={defaultEmail}
+                  value={f.email}
+                  onChange={(e) => f.setEmail(e.target.value)}
                   required
+                  aria-invalid={f.isEmailError}
+                  className={cn(
+                    f.isEmailError &&
+                      "border-destructive focus-visible:ring-destructive",
+                    f.isEmailSuccess &&
+                      "border-emerald-500 focus-visible:ring-emerald-500"
+                  )}
                 />
+                <FieldDescription
+                  className={cn(
+                    f.isEmailError && "text-destructive",
+                    f.isEmailSuccess && "text-emerald-600"
+                  )}
+                >
+                  {f.emailMessage || "로그인 및 알림 수신에 사용될 이메일입니다."}
+                </FieldDescription>
               </Field>
 
+              {/* 비밀번호 / 비밀번호 확인 */}
               <Field>
                 <Field className="grid grid-cols-2 gap-4">
                   <Field>
@@ -253,7 +133,16 @@ export function SignupForm({
                       id="password"
                       name="password"
                       type="password"
+                      value={f.password}
+                      onChange={(e) => f.setPassword(e.target.value)}
                       required
+                      aria-invalid={f.isPasswordError}
+                      className={cn(
+                        f.isPasswordError &&
+                          "border-destructive focus-visible:ring-destructive",
+                        f.isPasswordSuccess &&
+                          "border-emerald-500 focus-visible:ring-emerald-500"
+                      )}
                     />
                   </Field>
                   <Field>
@@ -264,25 +153,46 @@ export function SignupForm({
                       id="confirm-password"
                       name="confirmPassword"
                       type="password"
+                      value={f.confirmPassword}
+                      onChange={(e) => f.setConfirmPassword(e.target.value)}
                       required
+                      aria-invalid={f.isPasswordError}
+                      className={cn(
+                        f.isPasswordError &&
+                          "border-destructive focus-visible:ring-destructive",
+                        f.isPasswordSuccess &&
+                          "border-emerald-500 focus-visible:ring-emerald-500"
+                      )}
                     />
                   </Field>
                 </Field>
-                <FieldDescription>최소 8자 이상이어야 합니다.</FieldDescription>
+                <FieldDescription
+                  className={cn(
+                    f.isPasswordError && "text-destructive",
+                    f.isPasswordSuccess && "text-emerald-600"
+                  )}
+                >
+                  {f.passwordMessage || "최소 8자 이상이어야 합니다."}
+                </FieldDescription>
               </Field>
 
+              {/* 제출 버튼 */}
               <Field>
-                <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? "가입 처리 중..." : "계정 만들기"}
+                <Button
+                  type="submit"
+                  disabled={f.isSubmitting || !f.canSubmit}
+                  className="w-full"
+                >
+                  {f.isSubmitting ? "가입 처리 중..." : "계정 만들기"}
                 </Button>
                 <FieldDescription className="text-center">
                   이미 계정이 있으신가요? <Link href="/login">로그인</Link>
                 </FieldDescription>
               </Field>
 
-              {submitError && (
+              {f.submitError && (
                 <FieldDescription className="text-center text-destructive">
-                  {submitError}
+                  {f.submitError}
                 </FieldDescription>
               )}
             </FieldGroup>
@@ -290,8 +200,8 @@ export function SignupForm({
         </CardContent>
       </Card>
       <FieldDescription className="px-6 text-center">
-        계속 진행하면, <a href="#">서비스 이용약관</a> 및{" "}
-        <a href="#">개인정보 처리방침</a>에 동의하는 것으로 간주합니다.
+        계속 진행하면, <a href="/terms">서비스 이용약관</a> 및{" "}
+        <a href="/privacy">개인정보 처리방침</a>에 동의하는 것으로 간주합니다.
       </FieldDescription>
     </div>
   );
