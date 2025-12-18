@@ -16,13 +16,21 @@ type RequestInitEx = Omit<RequestInit, "body"> & {
   json?: unknown;
   /** body를 직접 쓰고 싶으면 json 대신 body 사용 */
   body?: BodyInit | null;
+  /** data + headers + status까지 받고 싶을 때 */
+  meta?: boolean;
+};
+
+export type ApiResponseMeta<T> = {
+  data?: T;
+  status?: number;
+  headers: Headers;
 };
 
 export async function apiFetch<T>(
   input: string,
   init: RequestInitEx = {}
 ): Promise<T> {
-  const { json, headers, body, ...rest } = init;
+  const { json, headers, body, meta, ...rest } = init;
 
   const res = await fetch(input, {
     ...rest,
@@ -46,8 +54,21 @@ export async function apiFetch<T>(
     );
   }
 
+  // meta 모드: 바디가 없어도 headers/status를 돌려줄 수 있음
+  if (meta) {
+    let data: unknown = undefined;
+    if (res.status !== 204) {
+      const text = await res.text();
+      if (text) data = JSON.parse(text) as T;
+    }
+    return { data, status: res.status, headers: res.headers } as T;
+  }
+
   // 204 No Content 방어
   if (res.status === 204) return undefined as T;
 
-  return (await res.json()) as T;
+  // body 없는 201 같은 케이스도 방어 (Location-only)
+  const text = await res.text();
+  if (!text) return undefined as T;
+  return JSON.parse(text) as T;
 }
