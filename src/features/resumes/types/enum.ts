@@ -5,6 +5,16 @@ export enum MilitaryStatus {
     SERVED = "SERVED",         // 군필
     EXEMPT = "EXEMPT"          // 면제
 }
+
+export enum MilitaryBranch {
+    ARMY="ARMY",
+    NAVY="NAVY",
+    AIR_FORCE="AIR_FORCE",
+    MARINE="MARINE",
+    SOCIAL_SERVICE="SOCIAL_SERVICE", // 사회복무요원 등
+    OTHER="OTHER"
+}
+
 export enum LanguageCode {
     KO = "KO",
     EN = "EN"

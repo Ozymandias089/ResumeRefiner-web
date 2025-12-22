@@ -1,9 +1,9 @@
 "use client";
 
-import { SectionCards } from "@/components/section-cards";
+import { SectionCards } from "@/components/dashboard/section-cards";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DashboardRecentResumes } from "@/components/dashboard-recent-resumes";
-import { DashboardRecentReviews } from "@/components/dashboard-recent-reviews";
+import { DashboardRecentResumes } from "@/components/dashboard/dashboard-recent-resumes";
+import { DashboardRecentReviews } from "@/components/dashboard/dashboard-recent-reviews";
 
 export default function Page() {
   return (

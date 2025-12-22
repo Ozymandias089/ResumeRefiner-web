@@ -1,4 +1,4 @@
-import {ResumesListPage} from "@/components/ResumesListPage";
+import {ResumesListPage} from "@/components/resumes/ResumesListPage";
 
 export default function Page() {
     return <ResumesListPage />;

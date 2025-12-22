@@ -1,6 +1,6 @@
 import {
     EducationDegrees,
-    LanguageCode,
+    LanguageCode, MilitaryBranch,
     MilitaryStatus,
     ResumeCustomSectionsType,
     ResumeSort
@@ -71,7 +71,7 @@ export type ResumeProfile = {
  */
 export type ResumeMilitaryService = {
     militaryStatus: MilitaryStatus;
-    branch?: string | null;
+    branch: MilitaryBranch;
     period?: string | null;
     rank?: string | null;
     notes?: string | null;
