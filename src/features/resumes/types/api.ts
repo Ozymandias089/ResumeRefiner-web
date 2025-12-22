@@ -116,3 +116,8 @@ export type GetResumeSummariesParams = {
     sort?: ResumeSort;
     q?: string | null;
 };
+
+export type UploadImageResponse = {
+    url: string;
+    fileId: number;
+};

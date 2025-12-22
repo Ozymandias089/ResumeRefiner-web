@@ -57,6 +57,6 @@ export type ChangePasswordResponse = {
  * POST /api/media/profile-image
  */
 export type UploadProfileImageResponse = {
-    profileImageUrl: string;
+    url: string;
     fileId: number;
 };
