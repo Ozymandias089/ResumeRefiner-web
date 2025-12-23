@@ -1,32 +1,39 @@
-// src/features/resumes/new/components/blocks/MilitaryBlock.tsx
-"use client";
-
+import { MilitaryBranch, MilitaryStatus } from "@/features/resumes/types/enum";
+import { ResumeMilitaryForm } from "@/features/resumes/new/types/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { MILITARY_BRANCH_OPTIONS, MILITARY_STATUS_OPTIONS } from "@/features/resumes/new/constants";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
 
-import type { ResumeMilitaryForm } from "@/features/resumes/new/types/form";
-import type { MilitaryStatus, MilitaryBranch } from "@/features/resumes/types/enum";
-import {MILITARY_BRANCH_OPTIONS, MILITARY_STATUS_OPTIONS} from "@/features/resumes/new/constants";
+const isDetailDisabledStatus = (status: MilitaryStatus) =>
+    status === "NOT_APPLICABLE" || status === "EXEMPT";
 
 export function MilitaryBlock(props: {
     military: ResumeMilitaryForm;
     disabled?: boolean;
     onChange: (patch: Partial<ResumeMilitaryForm>) => void;
     onChangeStatus: (status: MilitaryStatus) => void;
-    onChangeBranch: (branch: MilitaryBranch) => void;
+    onChangeBranch: (branch: MilitaryBranch | null) => void; // nullable 반영
 }) {
     const { military, disabled, onChange, onChangeStatus, onChangeBranch } = props;
 
-    const extraDisabled = disabled || String(military.militaryStatus) === "NOT_APPLICABLE";
+    const status = military.militaryStatus as MilitaryStatus;
+    const extraDisabled = !!disabled || isDetailDisabledStatus(status);
+
+    const handleChangeStatus = (next: MilitaryStatus) => {
+        onChangeStatus(next);
+
+        if (isDetailDisabledStatus(next)) {
+            onChange({
+                branch: null,   // nullable이니까 null이 정답
+                period: "",
+                rank: "",
+                notes: "",
+            });
+        }
+    };
 
     return (
         <Card>
@@ -39,7 +46,7 @@ export function MilitaryBlock(props: {
                     <Label>상태</Label>
                     <Select
                         value={String(military.militaryStatus)}
-                        onValueChange={(v) => onChangeStatus(v as any)}
+                        onValueChange={(v) => handleChangeStatus(v as MilitaryStatus)}
                         disabled={disabled}
                     >
                         <SelectTrigger>
@@ -58,8 +65,8 @@ export function MilitaryBlock(props: {
                 <div className="space-y-2">
                     <Label>군별</Label>
                     <Select
-                        value={String(military.branch)}
-                        onValueChange={(v) => onChangeBranch(v as any)}
+                        value={military.branch ? String(military.branch) : ""} // ✅ null이면 빈 값
+                        onValueChange={(v) => onChangeBranch(v ? (v as MilitaryBranch) : null)}
                         disabled={extraDisabled}
                     >
                         <SelectTrigger>
@@ -73,9 +80,16 @@ export function MilitaryBlock(props: {
                             ))}
                         </SelectContent>
                     </Select>
-                    {String(military.militaryStatus) === "NONE" ? (
+
+                    {String(military.militaryStatus) === "NOT_APPLICABLE" ? (
                         <p className="text-xs text-muted-foreground">
                             ‘해당없음’ 선택 시 군별/기간/계급/비고 입력은 비활성화됩니다.
+                        </p>
+                    ) : null}
+
+                    {String(military.militaryStatus) === "EXEMPT" ? (
+                        <p className="text-xs text-muted-foreground">
+                            ‘면제’ 선택 시 군별/기간/계급/비고 입력은 비활성화됩니다.
                         </p>
                     ) : null}
                 </div>

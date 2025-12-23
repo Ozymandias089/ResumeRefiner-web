@@ -4,19 +4,21 @@ import {
     MilitaryStatus,
     EducationDegrees,
     ResumeCustomSectionsType,
-    MilitaryBranch,
+    MilitaryBranch, Gender,
 } from "@/features/resumes/types/enum";
 
 export type ResumeProfileForm = {
     name: string;
+    gender: Gender;
     email: string;
     phone: string;
     location: string;
+    birthDate?: string;      // "yyyy-MM-dd"
 };
 
 export type ResumeMilitaryForm = {
     militaryStatus: MilitaryStatus;
-    branch: MilitaryBranch;
+    branch?: MilitaryBranch | null;
     period: string;
     rank: string;
     notes: string;

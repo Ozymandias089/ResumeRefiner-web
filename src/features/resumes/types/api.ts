@@ -1,5 +1,5 @@
 import {
-    EducationDegrees,
+    EducationDegrees, Gender,
     LanguageCode, MilitaryBranch,
     MilitaryStatus,
     ResumeCustomSectionsType,
@@ -12,7 +12,7 @@ import {
 export type CreateResumeRequest = {
     title: string;
     languageCode: LanguageCode;
-    profile?: ResumeProfile | null;
+    profile?: ResumeProfileRequest | null;
     military: ResumeMilitaryService;
     education: ResumeEducation[];
     experiences?: ResumeExperience[] | null;
@@ -29,7 +29,7 @@ export type GetResumeResponse = {
     updatedAt: string;
     languageCode: LanguageCode;
     photoUrl: string;
-    profile: ResumeProfile | null;
+    profile: ResumeProfileResponse | null;
     military: ResumeMilitaryService | null;
     educations: ResumeEducation[];
     experiences?: ResumeExperience[];
@@ -59,11 +59,23 @@ export type ResumeSummary = {
 /**
  * 이력서 개인정보 내부DTO
  */
-export type ResumeProfile = {
+export type ResumeProfileRequest = {
     name?: string | null;
+    gender: Gender;
     email?: string | null;
     phone?: string | null;
     location?: string | null;
+    birthDate?: string | null;
+};
+
+export type ResumeProfileResponse = {
+    name?: string | null;
+    gender: Gender;
+    email?: string | null;
+    phone?: string | null;
+    location?: string | null;
+    birthDate?: string | null;
+    age?: number | null;
 };
 
 /**

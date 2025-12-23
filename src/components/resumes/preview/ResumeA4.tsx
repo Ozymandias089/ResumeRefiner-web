@@ -1,18 +1,17 @@
 import React from "react";
 import { cn } from "@/lib/utils";
-import type { GetResumeResponse } from "@/features/resumes/types/api";
+import type {GetResumeResponse, ResumeProfileResponse} from "@/features/resumes/types/api";
 import type {
     ResumeEducation,
     ResumeExperience,
     ResumeCustomSection,
     ResumeMilitaryService,
-    ResumeProfile,
 } from "@/features/resumes/types/api";
-import type {
+import {
     LanguageCode,
     MilitaryStatus,
     MilitaryBranch,
-    EducationDegrees,
+    EducationDegrees, Gender,
 } from "@/features/resumes/types/enum";
 
 import {
@@ -32,7 +31,7 @@ const UI = {
         education: "학력",
         military: "병역",
 
-        contact: { email: "이메일", phone: "전화번호", location: "거주지" },
+        contact: { email: "이메일", phone: "전화번호", location: "거주지", birthDate: "생년월일", age: "만 나이", gender: "성별" },
         field: {
             period: "기간",
             degree: "학위",
@@ -50,7 +49,7 @@ const UI = {
         education: "EDUCATION",
         military: "MILITARY SERVICE",
 
-        contact: { email: "Email", phone: "Phone", location: "Location" },
+        contact: { email: "Email", phone: "Phone", location: "Location", birthDate: "Date of Birth", age: "Age", gender: "Gender" },
         field: {
             period: "Period",
             degree: "Degree",
@@ -66,6 +65,10 @@ const UI = {
 /** ====== Enum 라벨(프런트 책임) ====== */
 const LABELS = {
     KO: {
+        gender: {
+            MALE: "남성",
+            FEMALE: "여성",
+        } satisfies Record<Gender, string>,
         militaryStatus: {
             NOT_APPLICABLE: "해당없음",
             NOT_SERVED: "미필",
@@ -100,6 +103,10 @@ const LABELS = {
         } satisfies Record<ResumeCustomSectionsType, string>,
     },
     EN: {
+        gender: {
+            MALE: "Male",
+            FEMALE: "Female",
+        } satisfies Record<Gender, string>,
         militaryStatus: {
             NOT_APPLICABLE: "N/A",
             NOT_SERVED: "Not served",
@@ -196,7 +203,7 @@ export function ResumeA4({ resume }: { resume: GetResumeResponse }) {
     const ui = UI[lang];
     const labels = LABELS[lang];
 
-    const profile: ResumeProfile | null = resume.profile ?? null;
+    const profile: ResumeProfileResponse | null = resume.profile ?? null;
     const military: ResumeMilitaryService | null = resume.military ?? null;
 
     const educations: ResumeEducation[] = [...(resume.educations ?? [])].sort(byOrder);
@@ -247,6 +254,14 @@ export function ResumeA4({ resume }: { resume: GetResumeResponse }) {
                         <SectionTitle>{ui.profile}</SectionTitle>
 
                         <div className="grid grid-cols-2 gap-x-8 gap-y-1">
+                            <div className="col-span-2">
+                                <Line
+                                    label={ui.contact.gender}
+                                    value={profile?.gender ? labels.gender[profile.gender] : null}
+                                />
+                            </div>
+                            <Line label={ui.contact.age} value={profile?.age?.toString() ?? null} />
+                            <Line label={ui.contact.birthDate} value={profile?.birthDate ?? null} />
                             <Line label={ui.contact.email} value={profile?.email ?? null} />
                             <Line label={ui.contact.phone} value={profile?.phone ?? null} />
                             {/* Location은 한 줄 전체 */}

@@ -16,6 +16,7 @@ import {
 import { useResumeSummaries } from "@/features/resumes/hooks/useResumeSummaries";
 import type { ResumeSort } from "@/features/resumes/types/enum";
 import { formatMDHM } from "@/lib/datetime";
+import Link from "next/link";
 
 const SORT_OPTIONS: { value: ResumeSort; label: string }[] = [
     { value: "UPDATED_AT_DESC", label: "최근 수정 순" },
@@ -116,7 +117,7 @@ export function ResumesListPage() {
                     </div>
 
                     <Button asChild>
-                        <a href="/resumes/new">새 이력서</a>
+                        <Link href="/resumes/new">새 이력서</Link>
                     </Button>
                 </div>
             </CardHeader>

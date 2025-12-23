@@ -39,6 +39,11 @@ export enum ResumeCustomSectionsType {
     OTHER = "OTHER",
 }
 
+export enum Gender {
+    MALE = "MALE",
+    FEMALE = "FEMALE",
+}
+
 export type ResumeSort =
     | "UPDATED_AT_DESC"
     | "UPDATED_AT_ASC"

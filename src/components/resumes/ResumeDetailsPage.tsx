@@ -5,7 +5,6 @@ import { useResumeDetails } from "@/features/resumes/hooks/useResumeDetails";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
 import { ResumeA4 } from "@/components/resumes/preview/ResumeA4";
 
 export function ResumeDetailsPage({ slug }: { slug: string }) {

@@ -16,9 +16,11 @@ export function toCreateResumeRequest(state: CreateResumeFormState): CreateResum
 
         profile: {
             name: opt(state.profile.name),
+            gender: state.profile.gender,
             email: opt(state.profile.email),
             phone: opt(state.profile.phone),
             location: opt(state.profile.location),
+            birthDate: opt(<string>state.profile.birthDate)
         },
 
         military: {

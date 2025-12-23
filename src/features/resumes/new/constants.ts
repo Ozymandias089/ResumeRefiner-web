@@ -2,7 +2,7 @@ import {
     LanguageCode,
     MilitaryStatus,
     ResumeCustomSectionsType,
-    EducationDegrees, MilitaryBranch,
+    EducationDegrees, MilitaryBranch, Gender,
 } from "@/features/resumes/types/enum";
 import type { CreateResumeFormState } from "@/features/resumes/new/types/form";
 
@@ -11,6 +11,11 @@ import type { CreateResumeFormState } from "@/features/resumes/new/types/form";
 export const LANGUAGE_OPTIONS: { label: string; value: LanguageCode }[] = [
     { label: "Korean", value: "KO" as LanguageCode },
     { label: "English", value: "EN" as LanguageCode },
+];
+
+export const GENDER_OPTIONS: { label: string; value: Gender }[] = [
+    { label: "남성", value: "MALE" as Gender },
+    { label: "여성", value: "FEMALE" as Gender },
 ];
 
 export const MILITARY_STATUS_OPTIONS: { label: string; value: MilitaryStatus }[] = [
@@ -55,6 +60,7 @@ export const CUSTOM_TYPE_DEFAULT = "PROJECT" as ResumeCustomSectionsType;
 // ---- Defaults (explicit, safe) ----
 
 export const DEFAULT_LANGUAGE_CODE = "KO" as LanguageCode;
+export const DEFAULT_GENDER_CODE = "MALE" as Gender;
 export const DEFAULT_MILITARY_STATUS = "NOT_APPLICABLE" as MilitaryStatus;
 export const DEFAULT_MILITARY_BRANCH = "ARMY" as MilitaryBranch;
 
@@ -62,7 +68,7 @@ export const createInitialResumeFormState = (): CreateResumeFormState => ({
     title: "",
     languageCode: DEFAULT_LANGUAGE_CODE,
 
-    profile: { name: "", email: "", phone: "", location: "" },
+    profile: { name: "", gender: DEFAULT_GENDER_CODE, email: "", phone: "", location: "", birthDate: "" },
     photoFile: null,
 
     military: {
