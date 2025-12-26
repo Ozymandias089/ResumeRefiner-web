@@ -34,6 +34,7 @@ export type GetResumeResponse = {
     educations: ResumeEducation[];
     experiences?: ResumeExperience[];
     customSections?: ResumeCustomSection[] | null;
+    version: number;
 };
 
 /**

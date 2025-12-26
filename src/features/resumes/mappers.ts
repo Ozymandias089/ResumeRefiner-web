@@ -1,9 +1,4 @@
-import type {
-    GetResumeResponse,
-    ResumeCustomSection,
-    ResumeEducation,
-    ResumeExperience,
-} from "@/features/resumes/types/api";
+import type { GetResumeResponse } from "@/features/resumes/types/api";
 
 const byDisplayOrder = <T extends { displayOrder: number }>(a: T, b: T) =>
     a.displayOrder - b.displayOrder;

@@ -11,7 +11,8 @@ import { ResumeDetailsTopBar } from "@/components/resumes/details/ResumeDetailsT
 export function ResumeDetailsPage({ slug }: { slug: string }) {
     const { data, isLoading, isError, error } = useResumeDetails(slug);
 
-    const title = useMemo(() => data?.title ?? "Resume", [data?.title]);
+    // const title = useMemo(() => data?.title ?? "Resume", [data?.title]);
+    const title = data?.title ?? "Resume";
 
     if (isLoading) return <ResumeDetailsLoading />;
 
@@ -25,7 +26,7 @@ export function ResumeDetailsPage({ slug }: { slug: string }) {
 
     return (
         <div className="mx-auto w-full max-w-6xl px-6 py-8">
-            <ResumeDetailsTopBar title={title} />
+            <ResumeDetailsTopBar title={title} etag={`"${data.version}"`} />
             <Separator className="my-6 print:hidden" />
 
             <div className="grid gap-8 lg:grid-cols-[1fr_380px] print:block">
@@ -33,13 +34,7 @@ export function ResumeDetailsPage({ slug }: { slug: string }) {
                     <ResumeA4 resume={data} />
                 </div>
             </div>
-
-            <div className="hidden print:block">
-                <style>{`
-          @page { size: A4; margin: 12mm; }
-          html, body { background: white !important; }
-        `}</style>
-            </div>
         </div>
     );
 }
+
