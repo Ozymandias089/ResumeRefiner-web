@@ -1,4 +1,4 @@
-import { AppLogo } from "@/components/app-logo"
+import { AppLogo } from "@/components/common/app-logo"
 import { LoginForm } from "@/components/auth/login-form"
 
 export default function LoginPage() {

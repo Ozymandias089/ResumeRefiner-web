@@ -14,7 +14,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { AppLogo } from "../app-logo";
+import { AppLogo } from "../common/app-logo";
 
 import { sidebarConfig } from "@/features/navigation/sidebar-config";
 import { filterNavByRole } from "@/features/navigation/selectors";

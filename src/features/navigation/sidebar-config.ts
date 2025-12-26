@@ -24,7 +24,7 @@ export type SidebarDocItem = {
 
 export const sidebarConfig = {
   navMain: [
-    { title: "대쉬보드", url: "/dashboard", icon: IconDashboard },
+    { title: "대시보드", url: "/dashboard", icon: IconDashboard },
     { title: "이력서", url: "/resumes", icon: IconFileDescription },
     { title: "리뷰", url: "/reviews", icon: IconReport },
     { title: "결제", url: "/billing", icon: IconReport },

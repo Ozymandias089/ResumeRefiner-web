@@ -1,6 +1,6 @@
 "use client";
 
-import { AppLogo } from "@/components/app-logo";
+import { AppLogo } from "@/components/common/app-logo";
 
 export function LandingLeftSection() {
   return (

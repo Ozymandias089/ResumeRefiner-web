@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { SignupForm } from "@/components/auth/signup-form";
-import { AppLogo } from "@/components/app-logo";
+import { AppLogo } from "@/components/common/app-logo";
 
 export default function SignupPage() {
   const searchParams = useSearchParams();
