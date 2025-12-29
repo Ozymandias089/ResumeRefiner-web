@@ -21,17 +21,17 @@ import {DeleteRowButton} from "@/components/resumes/blocks/DeleteRowButton";
 export function EducationBlock(props: {
     education: ResumeEducationForm[];
     disabled?: boolean;
-    onAdd: () => void;
-    onRemove: (idx: number) => void;
-    onChangeItem: (idx: number, patch: Partial<ResumeEducationForm>) => void;
+    onAddAction: () => void;
+    onRemoveAction: (idx: number) => void;
+    onChangeItemAction: (idx: number, patch: Partial<ResumeEducationForm>) => void;
 }) {
-    const { education, disabled, onAdd, onRemove, onChangeItem } = props;
+    const { education, disabled, onAddAction, onRemoveAction, onChangeItemAction } = props;
 
     return (
         <Card>
             <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>학력</CardTitle>
-                <Button type="button" variant="outline" onClick={onAdd} disabled={disabled}>
+                <Button type="button" variant="outline" onClick={onAddAction} disabled={disabled}>
                     학력 추가
                 </Button>
             </CardHeader>
@@ -46,7 +46,7 @@ export function EducationBlock(props: {
                             <DeleteRowButton
                                 className="bg-destructive/90 hover:bg-destructive"
                                 disabled={disabled || education.length <= 1}
-                                onClick={() => onRemove(idx)}
+                                onClickAction={() => onRemoveAction(idx)}
                                 label="삭제"
                             />
                         </div>
@@ -57,7 +57,7 @@ export function EducationBlock(props: {
                                 <Input
                                     disabled={disabled}
                                     value={e.schoolName ?? ""}
-                                    onChange={(ev) => onChangeItem(idx, { schoolName: ev.target.value })}
+                                    onChange={(ev) => onChangeItemAction(idx, { schoolName: ev.target.value })}
                                 />
                             </div>
 
@@ -66,7 +66,7 @@ export function EducationBlock(props: {
                                 <Input
                                     disabled={disabled}
                                     value={e.major ?? ""}
-                                    onChange={(ev) => onChangeItem(idx, { major: ev.target.value })}
+                                    onChange={(ev) => onChangeItemAction(idx, { major: ev.target.value })}
                                 />
                             </div>
 
@@ -76,7 +76,7 @@ export function EducationBlock(props: {
                                     disabled={disabled}
                                     value={String(e.degree ?? "NONE")}
                                     onValueChange={(v) =>
-                                        onChangeItem(idx, { degree: v === "NONE" ? null : (v as any) })
+                                        onChangeItemAction(idx, { degree: v === "NONE" ? null : (v as any) })
                                     }
                                 >
                                     <SelectTrigger>
@@ -97,7 +97,7 @@ export function EducationBlock(props: {
                                 <Input
                                     disabled={disabled}
                                     value={e.period ?? ""}
-                                    onChange={(ev) => onChangeItem(idx, { period: ev.target.value })}
+                                    onChange={(ev) => onChangeItemAction(idx, { period: ev.target.value })}
                                     placeholder="예: 2018.03 ~ 2022.02"
                                 />
                             </div>
@@ -107,7 +107,7 @@ export function EducationBlock(props: {
                                 <Textarea
                                     disabled={disabled}
                                     value={e.description}
-                                    onChange={(ev) => onChangeItem(idx, { description: ev.target.value })}
+                                    onChange={(ev) => onChangeItemAction(idx, { description: ev.target.value })}
                                 />
                             </div>
                         </div>

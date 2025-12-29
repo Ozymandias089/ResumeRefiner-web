@@ -21,17 +21,17 @@ import {DeleteRowButton} from "@/components/resumes/blocks/DeleteRowButton";
 export function CustomSectionsBlock(props: {
     custom: ResumeCustomSectionForm[];
     disabled?: boolean;
-    onAdd: () => void;
-    onRemove: (idx: number) => void;
-    onChangeItem: (idx: number, patch: Partial<ResumeCustomSectionForm>) => void;
+    onAddAction: () => void;
+    onRemoveAction: (idx: number) => void;
+    onChangeItemAction: (idx: number, patch: Partial<ResumeCustomSectionForm>) => void;
 }) {
-    const { custom, disabled, onAdd, onRemove, onChangeItem } = props;
+    const { custom, disabled, onAddAction, onRemoveAction, onChangeItemAction } = props;
 
     return (
         <Card>
             <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>커스텀 섹션</CardTitle>
-                <Button type="button" variant="outline" onClick={onAdd} disabled={disabled}>
+                <Button type="button" variant="outline" onClick={onAddAction} disabled={disabled}>
                     섹션 추가
                 </Button>
             </CardHeader>
@@ -52,7 +52,7 @@ export function CustomSectionsBlock(props: {
                             <DeleteRowButton
                                 className="bg-destructive/90 hover:bg-destructive"
                                 disabled={disabled}
-                                onClick={() => onRemove(idx)}
+                                onClickAction={() => onRemoveAction(idx)}
                                 label="삭제"
                             />
                         </div>
@@ -63,7 +63,7 @@ export function CustomSectionsBlock(props: {
                                 <Select
                                     disabled={disabled}
                                     value={String(c.type)}
-                                    onValueChange={(v) => onChangeItem(idx, { type: v as any })}
+                                    onValueChange={(v) => onChangeItemAction(idx, { type: v as any })}
                                 >
                                     <SelectTrigger>
                                         <SelectValue placeholder="유형 선택" />
@@ -83,7 +83,7 @@ export function CustomSectionsBlock(props: {
                                 <Input
                                     disabled={disabled}
                                     value={c.subject??""}
-                                    onChange={(e) => onChangeItem(idx, { subject: e.target.value })}
+                                    onChange={(e) => onChangeItemAction(idx, { subject: e.target.value })}
                                     placeholder="예: 개인 프로젝트"
                                 />
                             </div>
@@ -93,7 +93,7 @@ export function CustomSectionsBlock(props: {
                                 <Textarea
                                     disabled={disabled}
                                     value={c.content??""}
-                                    onChange={(e) => onChangeItem(idx, { content: e.target.value })}
+                                    onChange={(e) => onChangeItemAction(idx, { content: e.target.value })}
                                     placeholder="핵심 역할, 사용 기술, 성과 등을 적어주세요."
                                 />
                             </div>

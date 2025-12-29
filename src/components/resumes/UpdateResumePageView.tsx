@@ -34,17 +34,19 @@ export function UpdateResumePageView({ slug }: { slug: string }) {
             <TitleBlock
                 title={f.state.title}
                 languageCode={f.state.languageCode}
-                onChangeTitle={f.setTitle}
-                onChangeLanguageCode={f.setLanguageCode}
+                onChangeTitleAction={f.setTitle}
+                onChangeLanguageCodeAction={f.setLanguageCode}
             />
 
-            <ProfileBlock profile={f.state.profile} onChange={f.updateProfile} />
+            <ProfileBlock profile={f.state.profile} onChangeAction={f.updateProfile} />
 
-            {/* 이미지: 수정은 보통 "업로드/삭제"를 별도 API로 처리하니 create와 동일하게 재사용 */}
             <ResumeImageBlock
+                photoUrl={f.photoUrl}
                 photoFile={f.state.photoFile}
-                onChangeFile={f.setPhotoFile}
+                removePhoto={f.state.removePhoto}
                 disabled={f.submitting}
+                onChangeFileAction={f.setPhotoFile}
+                onToggleRemoveAction={f.toggleRemovePhoto}
             />
 
             <MilitaryBlock
@@ -57,23 +59,23 @@ export function UpdateResumePageView({ slug }: { slug: string }) {
 
             <EducationBlock
                 education={f.state.education}
-                onAdd={f.addEducation}
-                onRemove={f.removeEducation}
-                onChangeItem={f.updateEducation}
+                onAddAction={f.addEducation}
+                onRemoveAction={f.removeEducation}
+                onChangeItemAction={f.updateEducation}
             />
 
             <ExperienceBlock
                 experiences={f.state.experiences}
-                onAdd={f.addExperience}
-                onRemove={f.removeExperience}
-                onChangeItem={f.updateExperience}
+                onAddAction={f.addExperience}
+                onRemoveAction={f.removeExperience}
+                onChangeItemAction={f.updateExperience}
             />
 
             <CustomSectionsBlock
                 custom={f.state.custom}
-                onAdd={f.addCustomSection}
-                onRemove={f.removeCustomSection}
-                onChangeItem={f.updateCustomSection}
+                onAddAction={f.addCustomSection}
+                onRemoveAction={f.removeCustomSection}
+                onChangeItemAction={f.updateCustomSection}
             />
         </div>
     );

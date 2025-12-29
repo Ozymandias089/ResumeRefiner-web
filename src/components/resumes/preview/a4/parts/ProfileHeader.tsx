@@ -3,6 +3,7 @@ import type { ResumeProfileResponse } from "@/features/resumes/types/api";
 import { SectionTitle } from "./SectionTitle";
 import { Line } from "./Line";
 import { nonEmpty } from "../helpers";
+import Image from "next/image";
 
 export function ProfileHeader(props: {
     profile: ResumeProfileResponse | null;
@@ -55,7 +56,7 @@ export function ProfileHeader(props: {
             </div>
 
             <div className="shrink-0">
-                <img
+                <Image
                     src={photoSrc}
                     alt="Photo"
                     referrerPolicy="no-referrer"

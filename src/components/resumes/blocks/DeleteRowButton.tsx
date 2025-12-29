@@ -6,14 +6,14 @@ import { Button } from "@/components/ui/button";
 
 type Props = {
     disabled?: boolean;
-    onClick: () => void;
+    onClickAction: () => void;
     label?: string;            // 기본 "삭제"
     className?: string;
 };
 
 export function DeleteRowButton({
                                     disabled,
-                                    onClick,
+                                    onClickAction,
                                     label = "삭제",
                                     className,
                                 }: Props) {
@@ -23,7 +23,7 @@ export function DeleteRowButton({
             variant="destructive"
             size="sm"
             disabled={disabled}
-            onClick={onClick}
+            onClick={onClickAction}
             className={className}
         >
             <IconTrash className="h-4 w-4" />

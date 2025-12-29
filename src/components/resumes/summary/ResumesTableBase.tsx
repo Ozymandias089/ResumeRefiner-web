@@ -16,20 +16,20 @@ export type ResumeSummaryRow = {
 export function ResumesTableBase(props: {
     resumes: ResumeSummaryRow[];
     showUpdatedAt?: boolean; // 대시보드에서 md 이상만 보여주고 싶으면 caller에서 처리
-    onRowClick?: (slug: string) => void; // 없으면 row 클릭 없음
-    renderActions?: (r: ResumeSummaryRow) => React.ReactNode;
+    onRowClickAction?: (slug: string) => void; // 없으면 row 클릭 없음
+    renderAction?: (r: ResumeSummaryRow) => React.ReactNode;
     actionsHeader?: React.ReactNode;
 }) {
     const router = useRouter();
 
     const onRowClick =
-        props.onRowClick ??
+        props.onRowClickAction ??
         ((slug: string) => {
             // 기본 동작을 원하면 여기서 push. 싫으면 caller에서 onRowClick 안 넘기면 됨.
             router.push(`/resumes/${slug}`);
         });
 
-    const clickable = !!props.onRowClick; // caller가 명시적으로 주입했을 때만 row click
+    const clickable = !!props.onRowClickAction; // caller가 명시적으로 주입했을 때만 row click
     // 만약 “기본으로 row click” 원하면 위 로직 바꾸면 됨.
 
     return (
@@ -71,7 +71,7 @@ export function ResumesTableBase(props: {
 
                         <TableCell className="text-right">
                             <div onClick={(e) => e.stopPropagation()}>
-                                {props.renderActions?.(r)}
+                                {props.renderAction?.(r)}
                             </div>
                         </TableCell>
                     </TableRow>

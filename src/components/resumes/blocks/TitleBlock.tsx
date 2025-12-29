@@ -12,10 +12,10 @@ import { LANGUAGE_OPTIONS } from "@/features/resumes/new/constants";
 export function TitleBlock(props: {
     title: string;
     languageCode: LanguageCode;
-    onChangeTitle: (v: string) => void;
-    onChangeLanguageCode: (v: LanguageCode) => void;
+    onChangeTitleAction: (v: string) => void;
+    onChangeLanguageCodeAction: (v: LanguageCode) => void;
 }) {
-    const { title, languageCode, onChangeTitle, onChangeLanguageCode } = props;
+    const { title, languageCode, onChangeTitleAction, onChangeLanguageCodeAction } = props;
 
     return (
         <Card>
@@ -25,12 +25,12 @@ export function TitleBlock(props: {
             <CardContent className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                     <Label>제목 *</Label>
-                    <Input value={title} onChange={(e) => onChangeTitle(e.target.value)} />
+                    <Input value={title} onChange={(e) => onChangeTitleAction(e.target.value)} />
                 </div>
 
                 <div className="space-y-2">
                     <Label>언어</Label>
-                    <Select value={String(languageCode)} onValueChange={(v) => onChangeLanguageCode(v as any)}>
+                    <Select value={String(languageCode)} onValueChange={(v) => onChangeLanguageCodeAction(v as any)}>
                         <SelectTrigger>
                             <SelectValue placeholder="언어 선택" />
                         </SelectTrigger>

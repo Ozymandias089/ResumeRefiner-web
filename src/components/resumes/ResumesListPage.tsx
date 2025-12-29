@@ -59,7 +59,7 @@ export function ResumesListPage() {
                                 totalPages={totalPages}
                                 hasPrev={!!data?.hasPrev}
                                 hasNext={!!data?.hasNext}
-                                onGoToPage1={(p1) => goToPage1(p1, totalPages)}
+                                onGoToPage1Action={(p1) => goToPage1(p1, totalPages)}
                             />
                         </>
                     )}

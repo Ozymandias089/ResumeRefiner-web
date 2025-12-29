@@ -10,9 +10,9 @@ export function PagedNavigation(props: {
     totalPages: number;
     hasPrev: boolean;
     hasNext: boolean;
-    onGoToPage1: (p1: number) => void;
+    onGoToPage1Action: (p1: number) => void;
 }) {
-    const { currentPage1, totalPages, hasPrev, hasNext, onGoToPage1 } = props;
+    const { currentPage1, totalPages, hasPrev, hasNext, onGoToPage1Action } = props;
 
     const clamp = (n: number, min: number, max: number) => Math.max(min, Math.min(max, n));
 
@@ -30,7 +30,7 @@ export function PagedNavigation(props: {
                         href="#"
                         onClick={(e) => {
                             e.preventDefault();
-                            if (hasPrev) onGoToPage1(currentPage1 - 1);
+                            if (hasPrev) onGoToPage1Action(currentPage1 - 1);
                         }}
                         aria-disabled={!hasPrev}
                         className={!hasPrev ? "pointer-events-none opacity-50" : ""}
@@ -44,7 +44,7 @@ export function PagedNavigation(props: {
                                 href="#"
                                 onClick={(e) => {
                                     e.preventDefault();
-                                    onGoToPage1(1);
+                                    onGoToPage1Action(1);
                                 }}
                                 isActive={currentPage1 === 1}
                             >
@@ -66,7 +66,7 @@ export function PagedNavigation(props: {
                             isActive={p1 === currentPage1}
                             onClick={(e) => {
                                 e.preventDefault();
-                                onGoToPage1(p1);
+                                onGoToPage1Action(p1);
                             }}
                         >
                             {p1}
@@ -86,7 +86,7 @@ export function PagedNavigation(props: {
                                 href="#"
                                 onClick={(e) => {
                                     e.preventDefault();
-                                    onGoToPage1(totalPages);
+                                    onGoToPage1Action(totalPages);
                                 }}
                                 isActive={currentPage1 === totalPages}
                             >
@@ -101,7 +101,7 @@ export function PagedNavigation(props: {
                         href="#"
                         onClick={(e) => {
                             e.preventDefault();
-                            if (hasNext) onGoToPage1(currentPage1 + 1);
+                            if (hasNext) onGoToPage1Action(currentPage1 + 1);
                         }}
                         aria-disabled={!hasNext}
                         className={!hasNext ? "pointer-events-none opacity-50" : ""}

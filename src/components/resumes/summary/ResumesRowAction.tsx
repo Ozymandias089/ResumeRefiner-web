@@ -26,7 +26,7 @@ function KebabIcon(props: React.SVGProps<SVGSVGElement>) {
 export function ResumeRowActions(props: {
     slug: string;
     title: string;
-    onOpen: () => void;
+    onOpenAction: () => void;
     onEditHref?: string; // 나중에 수정 페이지 생기면 사용
 }) {
     const [deleteOpen, setDeleteOpen] = useState(false);
@@ -58,7 +58,7 @@ export function ResumeRowActions(props: {
                     <DropdownMenuItem
                         onClick={(e) => {
                             e.stopPropagation();
-                            props.onOpen();
+                            props.onOpenAction();
                         }}
                     >
                         열기

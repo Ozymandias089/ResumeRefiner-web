@@ -9,6 +9,7 @@ import type { UpdateResumeRequest } from "@/features/resumes/edit/type/api";
 
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import {resumeApi} from "@/features/resumes/api";
 
 export type ResumeFormState = {
     title: string;
@@ -24,6 +25,7 @@ export type ResumeFormState = {
     };
 
     photoFile: File | null;
+    removePhoto: boolean;
 
     military: {
         militaryStatus: any;
@@ -75,11 +77,13 @@ export function useUpdateResumeForm(slug: string) {
     const [state, setState] = useState<ResumeFormState | null>(null);
     const [dirty, setDirty] = useState<DirtyFlags>(makeEmptyDirty);
 
-    // ✅ 성공 후에도 최신 If-Match를 쓰기 위해 로컬 version을 따로 들고감
     const [expectedVersion, setExpectedVersion] = useState<number | null>(null);
 
-    // base snapshot
+    // ✅ 초기 기준 snapshot (payload 생성용)
     const baseRef = useRef<ResumeFormState | null>(null);
+
+    // ✅ 수정 화면에서 “현재 등록된 사진 URL”이 필요함 (파일 선택 전 표시)
+    const currentPhotoUrl = data?.photoUrl ?? null;
 
     useEffect(() => {
         if (!data) return;
@@ -101,6 +105,7 @@ export function useUpdateResumeForm(slug: string) {
             },
 
             photoFile: null,
+            removePhoto: false,
 
             military: m
                 ? {
@@ -128,8 +133,6 @@ export function useUpdateResumeForm(slug: string) {
         baseRef.current = initial;
         setState(initial);
         setDirty(makeEmptyDirty());
-
-        // ✅ 현재 버전 저장
         setExpectedVersion(data.version);
     }, [data]);
 
@@ -139,46 +142,75 @@ export function useUpdateResumeForm(slug: string) {
         setDirty((prev) => (prev[key] ? prev : { ...prev, [key]: true }));
     }, []);
 
-    const setTitle = useCallback((title: string) => {
-        setState((s) => (s ? { ...s, title } : s));
-        markDirty("title");
-    }, [markDirty]);
+    // ===== setters =====
+    const setTitle = useCallback(
+        (title: string) => {
+            setState((s) => (s ? { ...s, title } : s));
+            markDirty("title");
+        },
+        [markDirty]
+    );
 
-    const setLanguageCode = useCallback((languageCode: any) => {
-        setState((s) => (s ? { ...s, languageCode } : s));
-        markDirty("languageCode");
-    }, [markDirty]);
+    const setLanguageCode = useCallback(
+        (languageCode: any) => {
+            setState((s) => (s ? { ...s, languageCode } : s));
+            markDirty("languageCode");
+        },
+        [markDirty]
+    );
 
-    const updateProfile = useCallback((patchObj: Partial<ResumeFormState["profile"]>) => {
-        setState((s) => (s ? { ...s, profile: { ...s.profile, ...patchObj } } : s));
-        markDirty("profile");
-    }, [markDirty]);
+    const updateProfile = useCallback(
+        (patchObj: Partial<ResumeFormState["profile"]>) => {
+            setState((s) => (s ? { ...s, profile: { ...s.profile, ...patchObj } } : s));
+            markDirty("profile");
+        },
+        [markDirty]
+    );
 
-    const setPhotoFile = useCallback((file: File | null) => {
-        setState((s) => (s ? { ...s, photoFile: file } : s));
-        markDirty("photoFile");
-    }, [markDirty]);
+    // ✅ 삭제 토글: 삭제 선택하면 업로드 파일은 의미 없으므로 null
+    const toggleRemovePhoto = useCallback(
+        (remove: boolean) => {
+            setState((s) => (s ? { ...s, removePhoto: remove, photoFile: remove ? null : s.photoFile } : s));
+            markDirty("photoFile");
+        },
+        [markDirty]
+    );
 
-    const updateMilitary = useCallback((patchObj: Partial<ResumeFormState["military"]>) => {
-        setState((s) => (s ? { ...s, military: { ...s.military, ...patchObj } } : s));
-        markDirty("military");
-    }, [markDirty]);
+    // ✅ 파일 선택하면 삭제 의도 해제
+    const setPhotoFile = useCallback(
+        (file: File | null) => {
+            setState((s) => (s ? { ...s, photoFile: file, removePhoto: file ? false : s.removePhoto } : s));
+            markDirty("photoFile");
+        },
+        [markDirty]
+    );
 
-    const setMilitaryStatus = useCallback((militaryStatus: any) => {
-        setState((s) => {
-            if (!s) return s;
-            const shouldClear = militaryStatus === "NOT_APPLICABLE";
-            return {
-                ...s,
-                military: { ...s.military, militaryStatus },
-                clearMilitaryService: shouldClear ? true : s.clearMilitaryService,
-            };
-        });
-        markDirty("military");
-        markDirty("clearMilitaryService");
-    }, [markDirty]);
+    const updateMilitary = useCallback(
+        (patchObj: Partial<ResumeFormState["military"]>) => {
+            setState((s) => (s ? { ...s, military: { ...s.military, ...patchObj } } : s));
+            markDirty("military");
+        },
+        [markDirty]
+    );
 
-    // arrays
+    const setMilitaryStatus = useCallback(
+        (militaryStatus: any) => {
+            setState((s) => {
+                if (!s) return s;
+                const shouldClear = militaryStatus === "NOT_APPLICABLE";
+                return {
+                    ...s,
+                    military: { ...s.military, militaryStatus },
+                    clearMilitaryService: shouldClear ? true : s.clearMilitaryService,
+                };
+            });
+            markDirty("military");
+            markDirty("clearMilitaryService");
+        },
+        [markDirty]
+    );
+
+    // arrays (생략: 너 코드 그대로)
     const addEducation = useCallback(() => {
         setState((s) => {
             if (!s) return s;
@@ -280,19 +312,33 @@ export function useUpdateResumeForm(slug: string) {
         );
 
         try {
+            // 1) 본문 PATCH
             const res = await patch.mutateAsync({
                 slug,
                 expectedVersion,
                 payload,
             });
 
-            // ✅ 버전 갱신 (중복 저장 412 방지)
             setExpectedVersion(res.newVersion);
 
-            // ✅ 현재 state를 새 base로
-            baseRef.current = state;
+            // 2) 이미지 처리 (PATCH 성공 이후)
+            if (dirty.photoFile) {
+                // 삭제 의도
+                if (state.removePhoto) {
+                    // 실제로 현재 사진이 있을 때만 호출해도 됨(없어도 서버가 204면 상관없음)
+                    await resumeApi.deleteResumeImage(slug);
+                    toast.success("사진 삭제 완료");
+                } else if (state.photoFile) {
+                    await resumeApi.uploadResumeImage(slug, state.photoFile);
+                    toast.success("사진 업로드 완료");
+                }
 
-            // ✅ dirty reset → 저장 버튼 비활성화
+                // 이미지 변경이 끝났으니 로컬 state 정리
+                setState((s) => (s ? { ...s, photoFile: null, removePhoto: false } : s));
+            }
+
+            // 3) base/dirties 갱신
+            baseRef.current = state;
             setDirty(makeEmptyDirty());
 
             toast.success("저장 완료", {
@@ -303,10 +349,11 @@ export function useUpdateResumeForm(slug: string) {
                 },
             });
         } catch (e: any) {
-            // 412 충돌이면 안내를 좀 더 명확히
             const msg = e?.message ?? "알 수 없는 오류";
             toast.error("저장 실패", {
-                description: msg.includes("412") ? "버전 충돌이 발생했습니다. 새로고침 후 다시 시도하세요." : msg,
+                description: msg.includes("412")
+                    ? "버전 충돌이 발생했습니다. 새로고침 후 다시 시도하세요."
+                    : msg,
                 action: {
                     label: "새로고침",
                     onClick: () => window.location.reload(),
@@ -320,6 +367,8 @@ export function useUpdateResumeForm(slug: string) {
         error,
         submitting,
 
+        photoUrl: currentPhotoUrl,
+
         state: state!,
         dirty,
 
@@ -329,6 +378,8 @@ export function useUpdateResumeForm(slug: string) {
         setTitle,
         setLanguageCode,
         updateProfile,
+
+        toggleRemovePhoto,
         setPhotoFile,
 
         updateMilitary,

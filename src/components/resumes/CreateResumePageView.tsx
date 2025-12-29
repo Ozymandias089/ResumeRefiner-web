@@ -29,16 +29,16 @@ export function CreateResumePageView(){
             <TitleBlock
                 title={f.state.title}
                 languageCode={f.state.languageCode}
-                onChangeTitle={f.setTitle}
-                onChangeLanguageCode={f.setLanguageCode}
+                onChangeTitleAction={f.setTitle}
+                onChangeLanguageCodeAction={f.setLanguageCode}
             />
             <ProfileBlock
                 profile={f.state.profile}
-                onChange={f.updateProfile}
+                onChangeAction={f.updateProfile}
             />
             <ResumeImageBlock
                 photoFile={f.state.photoFile}
-                onChangeFile={f.setPhotoFile}
+                onChangeFileAction={f.setPhotoFile}
                 disabled={f.submitting}
             />
             <MilitaryBlock
@@ -50,21 +50,21 @@ export function CreateResumePageView(){
             />
             <EducationBlock
                 education={f.state.education}
-                onAdd={f.addEducation}
-                onRemove={f.removeEducation}
-                onChangeItem={f.updateEducation}
+                onAddAction={f.addEducation}
+                onRemoveAction={f.removeEducation}
+                onChangeItemAction={f.updateEducation}
             />
             <ExperienceBlock
                 experiences={f.state.experiences}
-                onAdd={f.addExperience}
-                onRemove={f.removeExperience}
-                onChangeItem={f.updateExperience}
+                onAddAction={f.addExperience}
+                onRemoveAction={f.removeExperience}
+                onChangeItemAction={f.updateExperience}
             />
             <CustomSectionsBlock
                 custom={f.state.custom}
-                onAdd={f.addCustomSection}
-                onRemove={f.removeCustomSection}
-                onChangeItem={f.updateCustomSection}
+                onAddAction={f.addCustomSection}
+                onRemoveAction={f.removeCustomSection}
+                onChangeItemAction={f.updateCustomSection}
             />
         </div>
     );
