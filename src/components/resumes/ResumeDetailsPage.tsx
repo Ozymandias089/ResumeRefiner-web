@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
 import { useResumeDetails } from "@/features/resumes/hooks/useResumeDetails";
 import { Separator } from "@/components/ui/separator";
 import { ResumeA4 } from "@/components/resumes/preview/ResumeA4";
