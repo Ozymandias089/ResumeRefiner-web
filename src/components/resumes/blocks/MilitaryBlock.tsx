@@ -98,7 +98,7 @@ export function MilitaryBlock(props: {
                     <Label>복무 기간</Label>
                     <Input
                         disabled={extraDisabled}
-                        value={military.period}
+                        value={military.period??""}
                         onChange={(e) => onChange({ period: e.target.value })}
                         placeholder="예: 2020.03 ~ 2021.12"
                     />
@@ -108,7 +108,7 @@ export function MilitaryBlock(props: {
                     <Label>계급</Label>
                     <Input
                         disabled={extraDisabled}
-                        value={military.rank}
+                        value={military.rank??""}
                         onChange={(e) => onChange({ rank: e.target.value })}
                     />
                 </div>
@@ -117,7 +117,7 @@ export function MilitaryBlock(props: {
                     <Label>비고</Label>
                     <Textarea
                         disabled={extraDisabled}
-                        value={military.notes}
+                        value={military.notes??""}
                         onChange={(e) => onChange({ notes: e.target.value })}
                     />
                 </div>

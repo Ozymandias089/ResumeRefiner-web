@@ -56,7 +56,7 @@ export function EducationBlock(props: {
                                 <Label>학교명 *</Label>
                                 <Input
                                     disabled={disabled}
-                                    value={e.schoolName}
+                                    value={e.schoolName ?? ""}
                                     onChange={(ev) => onChangeItem(idx, { schoolName: ev.target.value })}
                                 />
                             </div>
@@ -65,7 +65,7 @@ export function EducationBlock(props: {
                                 <Label>전공</Label>
                                 <Input
                                     disabled={disabled}
-                                    value={e.major}
+                                    value={e.major ?? ""}
                                     onChange={(ev) => onChangeItem(idx, { major: ev.target.value })}
                                 />
                             </div>
@@ -96,7 +96,7 @@ export function EducationBlock(props: {
                                 <Label>기간</Label>
                                 <Input
                                     disabled={disabled}
-                                    value={e.period}
+                                    value={e.period ?? ""}
                                     onChange={(ev) => onChangeItem(idx, { period: ev.target.value })}
                                     placeholder="예: 2018.03 ~ 2022.02"
                                 />

@@ -82,7 +82,7 @@ export function CustomSectionsBlock(props: {
                                 <Label>제목 *</Label>
                                 <Input
                                     disabled={disabled}
-                                    value={c.subject}
+                                    value={c.subject??""}
                                     onChange={(e) => onChangeItem(idx, { subject: e.target.value })}
                                     placeholder="예: 개인 프로젝트"
                                 />
@@ -92,7 +92,7 @@ export function CustomSectionsBlock(props: {
                                 <Label>내용 *</Label>
                                 <Textarea
                                     disabled={disabled}
-                                    value={c.content}
+                                    value={c.content??""}
                                     onChange={(e) => onChangeItem(idx, { content: e.target.value })}
                                     placeholder="핵심 역할, 사용 기술, 성과 등을 적어주세요."
                                 />

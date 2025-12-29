@@ -25,7 +25,7 @@ export function ResumeDetailsPage({ slug }: { slug: string }) {
 
     return (
         <div className="mx-auto w-full max-w-6xl px-6 py-8">
-            <ResumeDetailsTopBar title={title} etag={`"${data.version}"`} />
+            <ResumeDetailsTopBar title={title} etag={`"${data.version}"`} slug={slug} />
             <Separator className="my-6 print:hidden" />
 
             <div className="grid gap-8 lg:grid-cols-[1fr_380px] print:block">

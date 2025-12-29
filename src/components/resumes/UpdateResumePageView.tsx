@@ -1,0 +1,80 @@
+// src/features/resumes/edit/components/UpdateResumePageView.tsx
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { TitleBlock } from "@/components/resumes/blocks/TitleBlock";
+import { ProfileBlock } from "@/components/resumes/blocks/ProfileBlock";
+import { ResumeImageBlock } from "@/components/resumes/blocks/ResumeImageBlock";
+import { MilitaryBlock } from "@/components/resumes/blocks/MilitaryBlock";
+import { EducationBlock } from "@/components/resumes/blocks/EducationBlock";
+import { ExperienceBlock } from "@/components/resumes/blocks/ExperienceBlock";
+import { CustomSectionsBlock } from "@/components/resumes/blocks/CustomSectionsBlock";
+import {useUpdateResumeForm} from "@/features/resumes/edit/hooks/useUpdateResumeForm";
+
+export function UpdateResumePageView({ slug }: { slug: string }) {
+    const f = useUpdateResumeForm(slug);
+
+    if (f.loading) return null; // 너 스타일대로 Skeleton 넣어도 됨
+    if (f.error) return <div className="p-6 text-sm">불러오기 실패</div>;
+
+    return (
+        <div className="mx-auto w-full max-w-4xl space-y-6 p-4 md:p-6">
+            <div className="flex items-center justify-between">
+                <div>
+                    <h1 className="text-xl font-semibold">이력서 수정</h1>
+                    <p className="text-sm text-muted-foreground">
+                        변경된 블럭만 PATCH (If-Match)
+                    </p>
+                </div>
+                <Button onClick={f.submit} disabled={f.submitting || !f.canSubmit}>
+                    {f.submitting ? "저장 중..." : "저장"}
+                </Button>
+            </div>
+
+            <TitleBlock
+                title={f.state.title}
+                languageCode={f.state.languageCode}
+                onChangeTitle={f.setTitle}
+                onChangeLanguageCode={f.setLanguageCode}
+            />
+
+            <ProfileBlock profile={f.state.profile} onChange={f.updateProfile} />
+
+            {/* 이미지: 수정은 보통 "업로드/삭제"를 별도 API로 처리하니 create와 동일하게 재사용 */}
+            <ResumeImageBlock
+                photoFile={f.state.photoFile}
+                onChangeFile={f.setPhotoFile}
+                disabled={f.submitting}
+            />
+
+            <MilitaryBlock
+                military={f.state.military}
+                disabled={f.submitting}
+                onChange={f.updateMilitary}
+                onChangeStatus={f.setMilitaryStatus}
+                onChangeBranch={(branch) => f.updateMilitary({ branch })}
+            />
+
+            <EducationBlock
+                education={f.state.education}
+                onAdd={f.addEducation}
+                onRemove={f.removeEducation}
+                onChangeItem={f.updateEducation}
+            />
+
+            <ExperienceBlock
+                experiences={f.state.experiences}
+                onAdd={f.addExperience}
+                onRemove={f.removeExperience}
+                onChangeItem={f.updateExperience}
+            />
+
+            <CustomSectionsBlock
+                custom={f.state.custom}
+                onAdd={f.addCustomSection}
+                onRemove={f.removeCustomSection}
+                onChangeItem={f.updateCustomSection}
+            />
+        </div>
+    );
+}

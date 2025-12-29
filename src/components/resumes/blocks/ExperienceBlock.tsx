@@ -54,7 +54,7 @@ export function ExperienceBlock(props: {
                                 <Label>회사 *</Label>
                                 <Input
                                     disabled={disabled}
-                                    value={x.company}
+                                    value={x.company??""}
                                     onChange={(e) => onChangeItem(idx, { company: e.target.value })}
                                 />
                             </div>
@@ -63,7 +63,7 @@ export function ExperienceBlock(props: {
                                 <Label>역할 *</Label>
                                 <Input
                                     disabled={disabled}
-                                    value={x.role}
+                                    value={x.role??""}
                                     onChange={(e) => onChangeItem(idx, { role: e.target.value })}
                                 />
                             </div>
@@ -72,7 +72,7 @@ export function ExperienceBlock(props: {
                                 <Label>기간 *</Label>
                                 <Input
                                     disabled={disabled}
-                                    value={x.period}
+                                    value={x.period??""}
                                     onChange={(e) => onChangeItem(idx, { period: e.target.value })}
                                     placeholder="예: 2023.01 ~ 2024.06"
                                 />
@@ -82,7 +82,7 @@ export function ExperienceBlock(props: {
                                 <Label>설명</Label>
                                 <Textarea
                                     disabled={disabled}
-                                    value={x.description}
+                                    value={x.description??""}
                                     onChange={(e) => onChangeItem(idx, { description: e.target.value })}
                                 />
                             </div>

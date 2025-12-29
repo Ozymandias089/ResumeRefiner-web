@@ -24,7 +24,7 @@ export function ProfileBlock(props: {
             <CardContent className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                     <Label>이름</Label>
-                    <Input value={profile.name} onChange={(e) => onChange({ name: e.target.value })} />
+                    <Input value={profile.name??""} onChange={(e) => onChange({ name: e.target.value })} />
                 </div>
 
                 <div className="space-y-2">
