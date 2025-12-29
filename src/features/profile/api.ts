@@ -36,4 +36,10 @@ export const profileApi = {
             body: formData,
         })
     },
+
+    deleteProfileImage(): Promise<void> {
+        return apiFetch<void>("/api/profile/profile-image", {
+            method: "DELETE",
+        })
+    }
 };

@@ -14,6 +14,7 @@ import { profileStore } from "../profile-store";
 type MutationState = {
     isUpdatingProfile: boolean;
     isUploadingProfileImage: boolean;
+    isDeletingProfileImage: boolean;
     isChangingPassword: boolean;
     error: unknown;
 };
@@ -22,6 +23,7 @@ export function useProfileMutations() {
     const [state, setState] = useState<MutationState>({
         isUpdatingProfile : false,
         isUploadingProfileImage: false,
+        isDeletingProfileImage: false,
         isChangingPassword: false,
         error: null,
     });
@@ -89,6 +91,24 @@ export function useProfileMutations() {
         []
     );
 
+    const deleteProfileImage = useCallback(async (): Promise<void> => {
+        setLoading("isDeletingProfileImage", true);
+        setError(null);
+
+        try {
+            await profileApi.deleteProfileImage();
+
+            // 전역 상태 갱신 (아바타/프로필 이미지 제거 반영)
+            await currentUserStore.refresh();
+            await profileStore.refresh();
+        } catch (e) {
+            setError(e);
+            throw e;
+        } finally {
+            setLoading("isDeletingProfileImage", false);
+        }
+    }, []);
+
     /**
      * PATCH /api/profile/password
      * 응답: ChangePasswordResponseDTO { message }
@@ -118,11 +138,13 @@ export function useProfileMutations() {
         // actions
         updateProfile,
         uploadProfileImage,
+        deleteProfileImage,
         changePassword,
 
         // flags
         isUpdatingProfile: state.isUpdatingProfile,
         isUploadingProfileImage: state.isUploadingProfileImage,
+        isDeletingProfileImage: state.isDeletingProfileImage,
         isChangingPassword: state.isChangingPassword,
 
         // error

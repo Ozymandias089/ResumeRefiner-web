@@ -6,11 +6,14 @@ export class ApiError extends Error {
   payload?: ApiErrorPayload;
 
   constructor(status: number, message: string, payload?: ApiErrorPayload) {
-    super(message);
+    super(String(message)); // 혹시 message가 문자열이 아니어도 안전
+    Object.setPrototypeOf(this, ApiError.prototype); // Error 상속 안정화
+    this.name = "ApiError";
     this.status = status;
     this.payload = payload;
   }
 }
+
 
 type RequestInitEx = Omit<RequestInit, "body"> & {
   json?: unknown;
@@ -46,6 +49,12 @@ export async function apiFetch<T>(
     const payload = (await res.json().catch(() => undefined)) as
       | ApiErrorPayload
       | undefined;
+
+    console.error("[apiFetch] error", {
+      url: input,
+      status: res.status,
+      payload,
+    });
 
     throw new ApiError(
       res.status,

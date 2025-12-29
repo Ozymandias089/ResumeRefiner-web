@@ -1,4 +1,3 @@
-// src/features/navigation/sidebar-config.ts
 import {
   IconDashboard,
   IconDatabase,
@@ -25,18 +24,18 @@ export type SidebarDocItem = {
 
 export const sidebarConfig = {
   navMain: [
-    { title: "Dashboard", url: "/dashboard", icon: IconDashboard },
-    { title: "Resumes", url: "/resumes", icon: IconFileDescription },
-    { title: "Reviews", url: "/reviews", icon: IconReport },
-    { title: "Billing", url: "/billing", icon: IconReport },
-    { title: "Admin", url: "/admin", icon: IconUsers, requiresAdmin: true },
-    { title: "Server Debug", url: "/debug/server", icon: IconDatabase },
+    { title: "대시보드", url: "/dashboard", icon: IconDashboard },
+    { title: "이력서", url: "/resumes", icon: IconFileDescription },
+    { title: "리뷰", url: "/reviews", icon: IconReport },
+    { title: "결제", url: "/billing", icon: IconReport },
+    { title: "관리자", url: "/admin", icon: IconUsers, requiresAdmin: true },
+    { title: "디버깅", url: "/debug", icon: IconDatabase },
   ] satisfies SidebarNavItem[],
 
   navSecondary: [
-    { title: "Settings", url: "/settings", icon: IconSettings },
-    { title: "Get Help", url: "/help", icon: IconHelp },
-    { title: "Search", url: "/search", icon: IconSearch },
+    { title: "설정", url: "/settings", icon: IconSettings },
+    { title: "문의", url: "/help", icon: IconHelp },
+    { title: "검색", url: "/search", icon: IconSearch },
   ] satisfies SidebarNavItem[],
 
   documents: [

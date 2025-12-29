@@ -1,10 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { NavDocuments } from "@/components/nav-documents";
-import { NavMain } from "@/components/nav-main";
-import { NavSecondary } from "@/components/nav-secondary";
-import { NavUser } from "@/components/nav-user";
+import { NavDocuments } from "@/components/navigator/nav-documents";
+import { NavMain } from "@/components/navigator/nav-main";
+import { NavSecondary } from "@/components/navigator/nav-secondary";
+import { NavUser } from "@/components/navigator/nav-user";
 import {
   Sidebar,
   SidebarContent,
@@ -14,11 +14,12 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { AppLogo } from "./app-logo";
+import { AppLogo } from "../common/app-logo";
 
 import { sidebarConfig } from "@/features/navigation/sidebar-config";
 import { filterNavByRole } from "@/features/navigation/selectors";
 import {useCurrentUser} from "@/features/auth/hooks/useCurrentUser";
+import Link from "next/link";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user } = useCurrentUser();
@@ -40,9 +41,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:p-1.5!"
             >
-              <a href="/dashboard">
+              <Link href="/dashboard">
                 <AppLogo className="h-8 w-auto" />
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
