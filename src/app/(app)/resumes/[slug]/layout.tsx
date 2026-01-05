@@ -14,27 +14,24 @@ export default async function ResumeSlugLayout({
 
     return (
         <div className="h-[calc(100dvh-4rem)]">
-            {/* 2-pane: left resume, right reviews/children */}
             <div
                 className={[
-                    "grid h-full grid-cols-1 gap-0",
-                    // ✅ 오른쪽 패널 폭 확보 (420 -> 520, 그리고 상한도 둠)
-                    "md:grid-cols-[minmax(0,1fr)_1px_minmax(460px,520px)]",
-                    "xl:grid-cols-[minmax(0,1fr)_1px_minmax(520px,600px)]",
+                    "grid h-full gap-0",
+                    "grid-cols-1",
+                    // ✅ 비율 기반: 오른쪽은 33vw 중심, 320~560 사이
+                    "lg:grid-cols-[minmax(0,1fr)_1px_clamp(320px,33vw,560px)]",
+                    "xl:grid-cols-[minmax(0,1fr)_1px_clamp(360px,30vw,620px)]",
                 ].join(" ")}
             >
-                {/* Left: Resume */}
-                <div className="min-w-0 overflow-auto p-4 md:p-6">
+                <div className="min-w-0 overflow-auto overflow-x-auto p-4 md:p-6">
                     <ResumeDetailsPage slug={slug} />
                 </div>
 
-                {/* Middle: Divider (desktop) */}
-                <div className="hidden md:block">
+                <div className="hidden lg:block">
                     <Separator orientation="vertical" className="h-full" />
                 </div>
 
-                {/* Right: Review panel */}
-                <aside className="min-w-0 overflow-auto border-t md:border-t-0 p-4 md:p-6">
+                <aside className="min-w-0 overflow-auto border-t lg:border-t-0 p-4 md:p-6">
                     {children}
                 </aside>
             </div>

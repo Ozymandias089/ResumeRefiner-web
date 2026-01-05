@@ -1,70 +1,105 @@
 /* src/styles/print-resume.css */
 
-/* A4 느낌(화면에서도 보기 좋게) */
-.print-root .a4-page {
-    width: 210mm;
-    max-width: 210mm;
-    min-height: 297mm;
-    padding: 12mm;
-    margin: 0 auto;
-    border: 1px solid rgba(0,0,0,0.08);
-    border-radius: 10px;
+/* =========================================================
+   ResumeA4 styles
+   - screen mode: 반응형 카드 (상세보기에서 보기 좋게)
+   - print mode : A4 미리보기 (프린트 라우트에서 보기 좋게)
+   - @media print: 실제 인쇄 레이아웃
+========================================================= */
+
+/* 공통: 긴 텍스트 줄바꿈 안전 */
+.resume-a4__page,
+.resume-a4__page * {
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
-/* 프린트 전용 */
+/* -------------------------
+   상세보기(screen)
+------------------------- */
+.resume-a4--screen {
+    display: block;
+}
+
+.resume-a4--screen .resume-a4__page {
+    width: 100%;
+    max-width: 900px;          /* 상세보기 카드 폭(원하면 조정/제거) */
+    margin: 0 auto;
+    padding: 24px;
+
+    background: white;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 12px;
+}
+
+/* -------------------------
+   프린트 라우트(print) - "인쇄 전 화면" 미리보기
+   ✅ 여기서 A4(210mm) 고정 + 가운데 정렬 + 세로 스택
+------------------------- */
+.resume-a4--print {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+
+    /* 프린트 라우트에서 화면이 좁으면 가로 스크롤로 */
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 24px;
+}
+
+.resume-a4--print .resume-a4__page {
+    width: 210mm;
+    min-width: 210mm;          /* shrink 방지 */
+    min-height: 297mm;
+    padding: 12mm;
+
+    background: white;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 12px;
+
+    flex: 0 0 auto;
+}
+
+/* -------------------------
+   실제 인쇄
+------------------------- */
 @media print {
-    /* 페이지 설정 */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        box-shadow: none !important;
+    }
+
     @page {
         size: A4;
-        margin: 12mm;
+        margin: 0;
     }
 
-    /* 배경/여백 정리 */
     html, body {
-        background: white !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-    }
-
-    /* 앱 UI(사이드바/헤더/네비) 제거: 보편 셀렉터 + 너 프로젝트 클래스 대응용 */
-    header,
-    nav,
-    aside,
-    .site-header,
-    .app-sidebar,
-    .sidebar,
-    .sidebar-inset,
-    [data-sidebar],
-    [data-slot="sidebar"],
-    [data-slot="header"],
-    .print-hidden-shell {
-        display: none !important;
-    }
-
-    /* 프린트 시 A4 영역만 자연스럽게 */
-    .print-root {
         margin: 0 !important;
         padding: 0 !important;
+        background: white !important;
     }
 
-    .print-root .a4-page {
-        width: auto !important;
-        min-height: auto !important;
+    /* 인쇄 때는 padding 제거 */
+    .resume-a4--print {
+        padding: 0 !important;
+        overflow: visible !important;
+    }
+
+    .resume-a4--print .resume-a4__title {
+        display: none !important; /* 프린트에 title 숨김 (원하면 제거) */
+    }
+
+    .resume-a4--print .resume-a4__page {
+        width: 210mm !important;
+        min-width: 0 !important;
+        min-height: 297mm !important;
         margin: 0 !important;
+        padding: 12mm !important;
+
         border: none !important;
         border-radius: 0 !important;
-        box-shadow: none !important;
-        padding: 0 !important; /* @page margin이 담당 */
-    }
-
-    /* 페이지 쪼개짐 방지 */
-    .break-inside-avoid {
-        break-inside: avoid;
-        page-break-inside: avoid;
-    }
-
-    /* Tailwind print:shadow-none 같은게 있어도 안전하게 */
-    * {
-        box-shadow: none !important;
     }
 }
