@@ -1,10 +1,16 @@
-import {ResumeReviewCreatePanel} from "@/components/reviews/ResumeReviewCreatePanel";
+import { ResumeDetailsPage } from "@/components/resumes/ResumeDetailsPage";
+import { ResumeTwoPaneShell } from "@/components/resumes/ResumeTwoPaneShell";
+import {ResumeReviewCreatePanel} from "@/components/reviews/create/ResumeReviewCreatePanel";
 
-export default async function ResumeReviewCreateRoute({
-                                                          params,
-                                                      }: {
-    params: Promise<{ slug: string }>;
-}) {
+export default async function ReviewNewRoute({
+                                                 params,
+                                             }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
-    return <ResumeReviewCreatePanel slug={slug} />;
+
+    return (
+        <ResumeTwoPaneShell
+            left={<ResumeDetailsPage slug={slug} />}
+            right={<ResumeReviewCreatePanel slug={slug} basePath={`/resumes/${slug}/reviews`} />}
+        />
+    );
 }

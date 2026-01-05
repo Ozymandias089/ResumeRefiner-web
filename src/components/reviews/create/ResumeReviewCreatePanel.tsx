@@ -3,70 +3,38 @@
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useReviewActions } from "@/features/reviews/hooks/useReviews";
-
 import { ReviewTone, CareerStage } from "@/features/reviews/types/enums";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { ReviewPanelCard } from "../details/ReviewPanelParts";
+import { CreateHeaderActions } from "./ResumeReviewCreateParts";
+import {normalizeReviewBasePath, reviewPath} from "@/components/reviews/reviewPath";
+import {FOCUS_OPTIONS, STAGE_LABEL, TONE_LABEL} from "@/components/reviews/create/reviewCreateConstants";
 
-// ✅ 한국어 라벨
-const TONE_LABEL: Record<ReviewTone, string> = {
-  [ReviewTone.PROFESSIONAL]: "프로페셔널(기본)",
-  [ReviewTone.NEUTRAL]: "중립",
-  [ReviewTone.FORMAL]: "격식",
-};
-
-const STAGE_LABEL: Record<CareerStage, string> = {
-  [CareerStage.UNKNOWN]: "미지정",
-  [CareerStage.STUDENT]: "학생/취준",
-  [CareerStage.ENTRY]: "신입(주니어)",
-  [CareerStage.MID]: "미들",
-  [CareerStage.SENIOR]: "시니어",
-  [CareerStage.LEAD]: "리드/매니저",
-};
-
-// ✅ 체크 옵션(원하면 더 줄여도 됨)
-const FOCUS_OPTIONS = [
-  { key: "backend", label: "백엔드 역량" },
-  { key: "performance", label: "성능/최적화" },
-  { key: "collaboration", label: "협업/커뮤니케이션" },
-  { key: "problem_solving", label: "문제 해결" },
-  { key: "architecture", label: "설계/아키텍처" },
-  { key: "writing", label: "문서화/정리" },
-] as const;
-
-export function ResumeReviewCreatePanel(props: { slug: string }) {
+export function ResumeReviewCreatePanel(props: { slug: string; basePath?: string }) {
   const router = useRouter();
+  const basePath = normalizeReviewBasePath(props.slug, props.basePath);
   const actions = useReviewActions(props.slug);
 
-  // ✅ enum 사용
   const [tone, setTone] = useState<ReviewTone>(ReviewTone.PROFESSIONAL);
   const [stage, setStage] = useState<CareerStage>(CareerStage.ENTRY);
 
-  // ✅ 폼 기반 커스텀 옵션
   const [jobTarget, setJobTarget] = useState("주니어 백엔드 개발자");
   const [focus, setFocus] = useState<string[]>(["backend"]);
   const [extraNotes, setExtraNotes] = useState("");
 
-  // ✅ 고급 모드(파워유저용) — 기본은 OFF
   const [advanced, setAdvanced] = useState(false);
   const [rawJson, setRawJson] = useState<string>("");
 
   const computedJson = useMemo(() => {
-    // 서버에서 jsonb로 저장되므로 "유효 JSON"만 보장하면 됨
     const obj = {
       jobTarget: jobTarget.trim() || undefined,
       focus: focus.length ? focus : undefined,
@@ -80,7 +48,6 @@ export function ResumeReviewCreatePanel(props: { slug: string }) {
       const t = rawJson.trim();
       return t.length ? t : null;
     }
-    // 기본 모드: 폼 → JSON 자동 생성
     return computedJson;
   }, [advanced, rawJson, computedJson]);
 
@@ -88,8 +55,9 @@ export function ResumeReviewCreatePanel(props: { slug: string }) {
     setFocus((prev) => (prev.includes(k) ? prev.filter((x) => x !== k) : [...prev, k]));
   };
 
+  const goList = () => router.push(basePath);
+
   const onCreate = async () => {
-    // ✅ 고급 모드면 JSON 유효성 검사
     if (advanced) {
       const t = rawJson.trim();
       if (t.length) {
@@ -102,44 +70,28 @@ export function ResumeReviewCreatePanel(props: { slug: string }) {
       }
     }
 
-    // ✅ 스펙 유지: tone/stage/customizationRequestJson 그대로 보냄
     const res = await actions.createAsync({
       tone,
       careerStage: stage,
       customizationRequestJson: customizationRequestJson ?? undefined,
     });
 
-    // createAsync가 CreateReviewResponseDTO를 그대로 반환한다면
-    // res?.id 로 상세로 이동 가능. (없으면 목록으로)
     const createdId = res?.id as number | undefined;
 
     if (createdId && Number.isFinite(createdId)) {
-      router.push(`/resumes/${props.slug}/reviews/${createdId}`);
+      router.push(reviewPath(basePath, String(createdId)));
     } else {
-      router.push(`/resumes/${props.slug}/reviews`);
+      router.push(basePath);
     }
   };
 
   return (
-      <Card>
-        <CardHeader className="flex flex-row items-start justify-between gap-3">
-          <div className="min-w-0">
-            <CardTitle className="truncate">새 리뷰 생성</CardTitle>
-            <p className="mt-1 text-xs text-muted-foreground">
-              이 이력서에 대해 AI 리뷰를 생성합니다.
-            </p>
-          </div>
-
-          <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => router.push(`/resumes/${props.slug}/reviews`)}
-          >
-            목록
-          </Button>
-        </CardHeader>
-
-        <CardContent className="space-y-4">
+      <ReviewPanelCard
+          title="새 리뷰 생성"
+          subtitle="이 이력서에 대해 AI 리뷰를 생성합니다."
+          right={<CreateHeaderActions onGoListAction={goList} />}
+      >
+        <CardContent className="space-y-4 p-0">
           {/* 톤 */}
           <div className="space-y-2">
             <Label>톤</Label>
@@ -227,9 +179,6 @@ export function ResumeReviewCreatePanel(props: { slug: string }) {
                         );
                       })}
                     </div>
-                    <p className="text-xs text-muted-foreground">
-                      리뷰에서 특히 강조하고 싶은 관점을 선택하세요.
-                    </p>
                   </div>
 
                   <div className="space-y-2">
@@ -260,15 +209,12 @@ export function ResumeReviewCreatePanel(props: { slug: string }) {
                       className="min-h-[220px] font-mono text-xs"
                       placeholder={computedJson}
                   />
-                  <p className="text-xs text-muted-foreground">
-                    JSON이 아니면 서버에서 거절될 수 있습니다.
-                  </p>
                 </>
             )}
           </div>
 
           <div className="flex justify-end gap-2">
-            <Button variant="secondary" onClick={() => router.push(`/resumes/${props.slug}`)}>
+            <Button variant="secondary" onClick={goList}>
               취소
             </Button>
             <Button onClick={onCreate} disabled={actions.isCreating}>
@@ -276,6 +222,6 @@ export function ResumeReviewCreatePanel(props: { slug: string }) {
             </Button>
           </div>
         </CardContent>
-      </Card>
+      </ReviewPanelCard>
   );
 }
