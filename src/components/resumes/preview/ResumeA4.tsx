@@ -1,23 +1,25 @@
 // src/components/resumes/preview/ResumeA4.tsx
 import React from "react";
-import type {
-    GetResumeResponse,
-    ResumeProfileResponse,
-    ResumeEducation,
-    ResumeExperience,
-    ResumeCustomSection,
-} from "@/features/resumes/types/api";
-
+import type { GetResumeResponse, ResumeProfileResponse, ResumeEducation, ResumeExperience, ResumeCustomSection } from "@/features/resumes/types/api";
 import { langOf, UI, LABELS, CUSTOM_SECTION_ORDER } from "./a4/i18n";
 import { byOrder } from "./a4/helpers";
-
 import { ProfileHeader } from "./a4/parts/ProfileHeader";
 import { ExperienceSection } from "./a4/parts/ExperienceSection";
 import { EducationSection } from "./a4/parts/EducationSection";
 import { MilitarySection } from "./a4/parts/MilitarySection";
 import { CustomSections } from "./a4/parts/CustomSections";
 
-export function ResumeA4({ resume }: { resume: GetResumeResponse }) {
+export type ResumeA4Mode = "screen" | "print";
+
+export function ResumeA4({
+                             resume,
+                             mode = "screen",
+                             showTitle = true,
+                         }: {
+    resume: GetResumeResponse;
+    mode?: ResumeA4Mode;
+    showTitle?: boolean;
+}) {
     const lang = langOf(resume.languageCode);
     const ui = UI[lang];
     const labels = LABELS[lang];
@@ -30,12 +32,14 @@ export function ResumeA4({ resume }: { resume: GetResumeResponse }) {
     const customs: ResumeCustomSection[] = [...(resume.customSections ?? [])].sort(byOrder);
 
     return (
-        <div className="print-root">
-            <div className="mb-4 print:hidden">
-                <h1 className="text-xl font-semibold">{resume.title}</h1>
-            </div>
+        <div className={`resume-a4 resume-a4--${mode}`}>
+            {showTitle && (
+                <div className="resume-a4__title mb-4 print:hidden">
+                    <h1 className="text-xl font-semibold">{resume.title}</h1>
+                </div>
+            )}
 
-            <div className="a4-page bg-background text-foreground shadow-sm print:shadow-none">
+            <div className="resume-a4__page bg-background text-foreground shadow-sm print:shadow-none">
                 <div className="mb-5 flex items-end justify-between">
                     <div className="text-[26px] font-bold tracking-tight leading-none">{ui.docTitle}</div>
                     <div className="text-[10.5px] text-muted-foreground" />
@@ -50,27 +54,16 @@ export function ResumeA4({ resume }: { resume: GetResumeResponse }) {
 
                 <ExperienceSection title={ui.experience} experiences={experiences} />
 
-                <EducationSection
-                    title={ui.education}
-                    educations={educations}
-                    labels={{ degree: labels.degree }}
-                />
+                <EducationSection title={ui.education} educations={educations} labels={{ degree: labels.degree }} />
 
                 <MilitarySection
                     title={ui.military}
                     uiField={ui.field}
-                    labels={{
-                        status: labels.militaryStatus,
-                        branch: labels.militaryBranch,
-                    }}
+                    labels={{ status: labels.militaryStatus, branch: labels.militaryBranch }}
                     military={military}
                 />
 
-                <CustomSections
-                    customSections={customs}
-                    labels={labels}
-                    order={CUSTOM_SECTION_ORDER}
-                />
+                <CustomSections customSections={customs} labels={labels} order={CUSTOM_SECTION_ORDER} />
             </div>
         </div>
     );

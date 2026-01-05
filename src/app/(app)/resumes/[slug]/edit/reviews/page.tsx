@@ -1,10 +1,10 @@
 import { UpdateResumePageView } from "@/components/resumes/UpdateResumePageView";
 import { ResumeTwoPaneShell } from "@/components/resumes/ResumeTwoPaneShell";
-import { ReviewPanelHomeCard } from "@/components/reviews/details/ReviewPanelHomeCard";
+import { ResumeReviewsPanel } from "@/components/reviews/details/ResumeReviewsPanel";
 
-export default async function ResumeEditRoute({
-                                                  params,
-                                              }: {
+export default async function EditReviewsRoute({
+                                                   params,
+                                               }: {
     params: Promise<{ slug: string }>;
 }) {
     const { slug } = await params;
@@ -12,7 +12,7 @@ export default async function ResumeEditRoute({
     return (
         <ResumeTwoPaneShell
             left={<UpdateResumePageView slug={slug} />}
-            right={<ReviewPanelHomeCard slug={slug} mode="edit" />}
+            right={<ResumeReviewsPanel slug={slug} basePath={`/resumes/${slug}/edit/reviews`} />}
         />
     );
 }

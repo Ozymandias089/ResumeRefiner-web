@@ -9,31 +9,24 @@ import { ResumeDetailsTopBar } from "@/components/resumes/details/ResumeDetailsT
 
 export function ResumeDetailsPage({ slug }: { slug: string }) {
     const { data, isLoading, isError, error } = useResumeDetails(slug);
-
-    // const title = useMemo(() => data?.title ?? "Resume", [data?.title]);
     const title = data?.title ?? "Resume";
 
     if (isLoading) return <ResumeDetailsLoading />;
-
     if (isError || !data) {
-        return (
-            <ResumeDetailsError
-                message={error instanceof Error ? error.message : "Unknown error"}
-            />
-        );
+        return <ResumeDetailsError message={error instanceof Error ? error.message : "Unknown error"} />;
     }
 
     return (
         <div className="mx-auto w-full max-w-6xl px-6 py-8">
             <ResumeDetailsTopBar title={title} etag={`"${data.version}"`} slug={slug} />
-            <Separator className="my-6 print:hidden" />
+            <Separator className="my-6" />
 
-            <div className="grid gap-8 lg:grid-cols-[1fr_380px] print:block">
-                <div className="min-w-0">
-                    <ResumeA4 resume={data} />
-                </div>
+            {/* ✅ 단일 컬럼 */}
+            <div className="min-w-0">
+                <ResumeA4 resume={data} mode="screen" showTitle={false} />
             </div>
         </div>
     );
 }
+
 

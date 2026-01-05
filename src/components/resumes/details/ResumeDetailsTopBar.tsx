@@ -12,7 +12,7 @@ export function ResumeDetailsTopBar(props: {
     const { title, slug, etag } = props;
 
     return (
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between print:hidden">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="min-w-0">
                 <h1 className="truncate text-xl font-semibold">{title}</h1>
                 <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
@@ -36,11 +36,14 @@ export function ResumeDetailsTopBar(props: {
 
                 <Button
                     variant="secondary"
-                    onClick={() => window.print()}
-                    title="브라우저 인쇄 → PDF로 저장 가능"
+                    onClick={() => {
+                        window.open(`/resumes/${slug}/print`, "_blank", "noopener,noreferrer");
+                    }}
+                    title="새 창에서 인쇄(PDF 저장)"
                 >
                     인쇄 / PDF
                 </Button>
+
             </div>
         </div>
     );

@@ -26,7 +26,7 @@ export const sidebarConfig = {
   navMain: [
     { title: "대시보드", url: "/dashboard", icon: IconDashboard },
     { title: "이력서", url: "/resumes", icon: IconFileDescription },
-    { title: "리뷰", url: "/reviews", icon: IconReport },
+    { title: "리뷰", url: "/reviews/recent", icon: IconReport },
     { title: "결제", url: "/billing", icon: IconReport },
     { title: "관리자", url: "/admin", icon: IconUsers, requiresAdmin: true },
     { title: "디버깅", url: "/debug", icon: IconDatabase },

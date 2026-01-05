@@ -1,8 +1,8 @@
 import { ResumeDetailsPage } from "@/components/resumes/ResumeDetailsPage";
 import { ResumeTwoPaneShell } from "@/components/resumes/ResumeTwoPaneShell";
-import { ReviewPanelHomeCard } from "@/components/reviews/details/ReviewPanelHomeCard";
+import { ResumeReviewsPanel } from "@/components/reviews/details/ResumeReviewsPanel";
 
-export default async function ResumeDetailsRoute({
+export default async function ResumeReviewsRoute({
                                                      params,
                                                  }: {
     params: Promise<{ slug: string }>;
@@ -12,7 +12,7 @@ export default async function ResumeDetailsRoute({
     return (
         <ResumeTwoPaneShell
             left={<ResumeDetailsPage slug={slug} />}
-            right={<ReviewPanelHomeCard slug={slug} mode="read" />}
+            right={<ResumeReviewsPanel slug={slug} basePath={`/resumes/${slug}/reviews`} />}
         />
     );
 }
