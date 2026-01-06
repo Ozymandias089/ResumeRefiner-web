@@ -1,6 +1,11 @@
 "use client"
 
-import { IconCalendar, IconFileDescription, IconSparkles, IconStars } from "@tabler/icons-react"
+import {
+  IconCalendar,
+  IconFileDescription,
+  // IconSparkles,
+  IconStars
+} from "@tabler/icons-react"
 
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { Badge } from "@/components/ui/badge"
@@ -17,7 +22,7 @@ import { formatDate } from "@/lib/datetime"
 export function SectionCards() {
   const { user } = useCurrentUser()
 
-  const credits = user?.credits ?? 0
+  // const credits = user?.credits ?? 0
   const resumeCount = user?.resumeCount ?? 0
   const reviewCount = user?.reviewCount ?? 0
 
@@ -31,30 +36,30 @@ export function SectionCards() {
       : null
 
   return (
-    <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
-      {/* 1) 남은 크레딧 */}
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>남은 크레딧</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            {credits.toLocaleString()}
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <IconSparkles />
-              AI 리뷰 실행에 사용됩니다
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            필요한 만큼 충전해서 사용하세요
-          </div>
-          <div className="text-muted-foreground">
-            Billing 페이지에서 크레딧을 충전할 수 있습니다.
-          </div>
-        </CardFooter>
-      </Card>
+    <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-3">
+      {/* 1) 남은 크레딧 미구현. 추가 시 <div className="">에서 @5xl/main:grid-cols-3의 숫자를 양대로 맞춰 조절하기 */}
+      {/*<Card className="@container/card">*/}
+      {/*  <CardHeader>*/}
+      {/*    <CardDescription>남은 크레딧</CardDescription>*/}
+      {/*    <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">*/}
+      {/*      {credits.toLocaleString()}*/}
+      {/*    </CardTitle>*/}
+      {/*    <CardAction>*/}
+      {/*      <Badge variant="outline">*/}
+      {/*        <IconSparkles />*/}
+      {/*        AI 리뷰 실행에 사용됩니다*/}
+      {/*      </Badge>*/}
+      {/*    </CardAction>*/}
+      {/*  </CardHeader>*/}
+      {/*  <CardFooter className="flex-col items-start gap-1.5 text-sm">*/}
+      {/*    <div className="line-clamp-1 flex gap-2 font-medium">*/}
+      {/*      필요한 만큼 충전해서 사용하세요*/}
+      {/*    </div>*/}
+      {/*    <div className="text-muted-foreground">*/}
+      {/*      Billing 페이지에서 크레딧을 충전할 수 있습니다.*/}
+      {/*    </div>*/}
+      {/*  </CardFooter>*/}
+      {/*</Card>*/}
 
       {/* 2) 등록한 이력서 개수 */}
       <Card className="@container/card">
