@@ -106,7 +106,7 @@ export function EducationBlock(props: {
                                 <Label>설명</Label>
                                 <Textarea
                                     disabled={disabled}
-                                    value={e.description}
+                                    value={e.description ?? ""}
                                     onChange={(ev) => onChangeItemAction(idx, { description: ev.target.value })}
                                 />
                             </div>
