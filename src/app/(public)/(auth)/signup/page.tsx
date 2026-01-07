@@ -2,16 +2,20 @@
 import { SignupForm } from "@/components/auth/signup-form";
 import { AppLogo } from "@/components/common/app-logo";
 
+type SearchParams = Record<string, string | string[] | undefined>;
+
 type Props = {
-  searchParams?: Record<string, string | string[] | undefined>;
+  // Next 16 환경에 따라 Promise로 올 수 있어서 둘 다 허용
+  searchParams?: SearchParams | Promise<SearchParams>;
 };
 
 function pick(v: string | string[] | undefined) {
   return Array.isArray(v) ? v[0] : v;
 }
 
-export default function SignupPage({ searchParams }: Props) {
-  const email = pick(searchParams?.email) ?? "";
+export default async function SignupPage({ searchParams }: Props) {
+  const sp = searchParams ? await searchParams: undefined;
+  const email = pick(sp?.email) ?? "";
 
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
