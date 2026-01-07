@@ -1,12 +1,18 @@
-"use client";
-
-import { useSearchParams } from "next/navigation";
+// src/app/(public)/(auth)/signup/page.tsx
 import { SignupForm } from "@/components/auth/signup-form";
 import { AppLogo } from "@/components/common/app-logo";
 
-export default function SignupPage() {
-  const searchParams = useSearchParams();
-  const email = searchParams.get("email") || "";
+type Props = {
+  searchParams?: Record<string, string | string[] | undefined>;
+};
+
+function pick(v: string | string[] | undefined) {
+  return Array.isArray(v) ? v[0] : v;
+}
+
+export default function SignupPage({ searchParams }: Props) {
+  const email = pick(searchParams?.email) ?? "";
+
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-6">
