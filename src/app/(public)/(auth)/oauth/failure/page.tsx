@@ -1,48 +1,37 @@
 // src/app/(public)/(auth)/oauth/failure/page.tsx
-"use client";
+type Props = {
+  searchParams?: Record<string, string | string[] | undefined>;
+};
 
-import { useRouter, useSearchParams } from "next/navigation";
+function pick(param: string | string[] | undefined): string | undefined {
+  if (Array.isArray(param)) return param[0];
+  return param;
+}
 
-export default function OAuthFailurePage() {
-    const router = useRouter();
-    const searchParams = useSearchParams();
+export default function OAuthFailurePage({ searchParams }: Props) {
+  const error = pick(searchParams?.error) ?? "unknown";
+  const message = pick(searchParams?.message);
 
-    // 선택: 백엔드가 ?reason=... 같은 걸 붙여주면 표시
-    const reason = searchParams.get("reason");
+  return (
+    <main className="min-h-screen flex items-center justify-center p-6">
+      <div className="w-full max-w-md rounded-xl border p-6 space-y-3">
+        <h1 className="text-xl font-semibold">OAuth 로그인 실패</h1>
+        <p className="text-sm text-muted-foreground">
+          인증 과정에서 문제가 발생했습니다.
+        </p>
 
-    return (
-        <div className="min-h-[60vh] flex items-center justify-center p-6">
-            <div className="w-full max-w-md rounded-lg border bg-background p-6 shadow-sm">
-                <h1 className="text-xl font-semibold">로그인에 실패했어요</h1>
-                <p className="mt-2 text-sm text-muted-foreground">
-                    OAuth 인증 과정에서 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.
-                </p>
-
-                {reason && (
-                    <div className="mt-4 rounded-md border bg-muted/40 p-3 text-sm">
-                        <div className="font-medium">사유</div>
-                        <div className="mt-1 wrap-break-word text-muted-foreground">{reason}</div>
-                    </div>
-                )}
-
-                <div className="mt-6 flex gap-2">
-                    <button
-                        type="button"
-                        className="inline-flex h-9 items-center justify-center rounded-md border px-4 text-sm font-medium hover:bg-accent"
-                        onClick={() => router.replace("/")}
-                    >
-                        랜딩으로 돌아가기
-                    </button>
-
-                    <button
-                        type="button"
-                        className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground hover:opacity-90"
-                        onClick={() => router.replace("/login")}
-                    >
-                        다시 로그인
-                    </button>
-                </div>
-            </div>
+        <div className="rounded-md bg-muted p-3 text-sm">
+          <div><b>error</b>: {error}</div>
+          {message ? <div><b>message</b>: {message}</div> : null}
         </div>
-    );
+
+        <a
+          href="/login"
+          className="inline-flex h-9 items-center justify-center rounded-md border px-4 text-sm"
+        >
+          로그인으로 돌아가기
+        </a>
+      </div>
+    </main>
+  );
 }
