@@ -7,17 +7,12 @@ import { Separator } from "@/components/ui/separator";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { FieldDescription } from "../ui/field";
-import {GoogleLoginButton} from "@/components/auth/GoogleLoginButton";
+import { GoogleLoginButton } from "@/components/auth/GoogleLoginButton";
+import Link from "next/link";
 
 export function SignupBox() {
   const router = useRouter();
   const [email, setEmail] = React.useState("");
-  const handleSignupClick = () => {
-    if (!email) {
-      return; // 필요시 에러 메시지 표시
-    }
-    router.push(`/signup?email=${encodeURIComponent(email)}`);
-  };
 
   return (
     <div className="w-full max-w-sm mx-auto space-y-6">
@@ -44,8 +39,11 @@ export function SignupBox() {
       <Button
         size="lg"
         className="w-full text-base font-semibold"
-        onClick={handleSignupClick}
-      >회원가입하기</Button>
+      >
+        <Link href={`/signup?email=${encodeURIComponent(email.trim())}`}>
+          회원가입하기
+        </Link>
+      </Button>
 
       {/* OR separator */}
       <div className="relative">
